@@ -4,7 +4,6 @@
 
 layout: home
 ---
-# Quantitative Analyst and Data Scientist
 ![frontpageimg](/assets/images/seo-thumbnail.jpg)
 
 

@@ -19,7 +19,6 @@
 # in the templates via {{ site.myvariable }}.
 
 title: Thomas T. Bjerring
-subtitle: Quantitative Analyst and Data Scientist
 email: your-email@example.com
 description: A website containing my blog posts, code snippets, and publications. All related to quantitative finance.
 baseurl: "" # the subpath of your site, e.g. /blog
