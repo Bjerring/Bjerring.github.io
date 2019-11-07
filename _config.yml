@@ -19,12 +19,14 @@
 # in the templates via {{ site.myvariable }}.
 
 title: Thomas T. Bjerring
-email: your-email@example.com
+#email: your-email@example.com
 description: A website containing my blog posts, code snippets, and publications. All related to quantitative finance.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
+linkedin_username: thomas-trier-bjerring
 github_username:  bjerring
+
 
 # Build settings
 theme: minima
