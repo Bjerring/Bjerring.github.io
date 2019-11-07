@@ -4,5 +4,6 @@
 
 layout: home
 ---
-image: /assets/images/seo-thumbnail.jpg
+![frontpageimg](/assets/images/seo-thumbnail.jpg)
+
 
