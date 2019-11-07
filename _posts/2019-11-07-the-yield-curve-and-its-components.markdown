@@ -8,7 +8,7 @@ categories: bonds
 Principal Component Analysis (PCA) is a well-known statistical technique from multivariate analysis used in managing and explaining interest rate risk. 
 Let's first inspect the swap curver over a period of time to qualitatively 
 
-![frontpageimg](/assets/images/swap_rates.png)
+![frontpageimg](/assets/images/yield_curve/swap_rates.png)
 
 By inspection of the swap curve paths above we can see that;
 1. Prices of swaps are generally moving together,
@@ -18,19 +18,19 @@ By inspection of the swap curve paths above we can see that;
 
 The following box-and-whiskers view of the same data gives a flavour of both rate level and dispersion during the period of observation.
 
-![frontpageimg](/assets/images/swap_rates_summary.png)
+![frontpageimg](/assets/images/yield_curve/swap_rates_summary.png)
 
 In a box and whiskers plot, the centre line in the box is the median, the edges of the box are the lower and upper quartiles (25th and 75th percentile), whilst the whiskers highlight the last data point within a distance of 1.5 x (upper – lower quartile) from the lower and upper quartiles. Values outside the whiskers are plotted separately as dots and suspected to be outliers.
 
-![frontpageimg](/assets/images/heatmap.png)
+![frontpageimg](/assets/images/yield_curve/heatmap.png)
 
 # PCA Decomposition
 
 
-![frontpageimg](/assets/images/explained_variance.png)
+![frontpageimg](/assets/images/yield_curve/explained_variance.png)
 
 
-![frontpageimg](/assets/images/PCA.png)
+![frontpageimg](/assets/images/yield_curve/PCA.png)
 
 
 ![frontpageimg](/assets/images/factor loadings.png)
