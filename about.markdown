@@ -7,8 +7,7 @@ permalink: /about/
 PhD and MSc in Financial Engineering and Operation Research. Extensive experience with equity research and implementation of systematic strategies focused on smart beta, alternative risk premia and alpha generation. Strong knowledge of feature engineering, machine learning (unsupervised/supervised learning and ensemble methods), risk modelling and portfolio construction.
 
 # Key Competences
-Machine learning ● Operations Research ● Asset Management ● AIFMD / MiFiD2 regulaƟon ● AnalyƟcs ●
-Risk Modelling ● Stochastic Optimization ● Inference ● Project Management 
+Machine learning ● Operations Research ● Stochastic Optimization ● Asset Management ● Risk Modelling ● Project Management 
 
 
 # Work Experience
@@ -16,11 +15,10 @@ Risk Modelling ● Stochastic Optimization ● Inference ● Project Management
 Date | Experience
 ------------ | -------------
 2018 - Present | Quantitative Analysist and Portfolio Manager
- | 
-2016 - 2018 Portfolio Manager and Co-founder, ANNOX Alternative Investment fund (Lux SICAV-RAIF)
-Research, development and management of alternative risk premium strategies for equity, fixed-income, and FX. In addition, establish trading infrstructure for systematic trading.
+2016 - 2018 | Portfolio Manager and Co-founder, ANNOX Alternative Investment fund (Lux SICAV-RAIF) 
+ | Research, development and management of alternative risk premium strategies for equity, fixed-income, and FX. In addition, establish trading infrstructure for systematic trading.
 2015 | Lead Developer and co-founder, QuantEdge
-| Managed account for major Israeli company. Research and development of decision and risk management tools to support portfolio manager
+ | Managed account for major Israeli company. Research and development of decision and risk management tools to support portfolio manager
 2013 | Research Assistant in Energy markets, DTU
  | Research position focused on development of models for decision-making and trading in the Nordic power markets.
 2013 - 2016 | Co-founder of Robust Investment Systems, Fintech Consulting company
