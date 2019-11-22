@@ -24,6 +24,7 @@ Date | Experience
 2013 - 2016 | Co-founder of Robust Investment Systems, Fintech Consulting company
 
 # Education
+
 Date | Level
 ------------ | -------------
 2014 - 2017 | Ph.D in Financial Engineering and Operations Research
