@@ -35,7 +35,7 @@ Date | Level
  | Master’ thesis: Multi-stage stochastic programming with Drawdown Constrains.
  | Application of different portfolio optimization models, hidden Markov chains, time series analysis and scenario generation.
 2007 - 2011 | Bachelor of Science in Mathematics
-| The Technical University of Denmark (DTU)
+ | The Technical University of Denmark (DTU)
 
 # Additional Achievements and Skills
 ## Programming 
