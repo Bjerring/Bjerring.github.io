@@ -29,12 +29,10 @@ Date | Level
 ------------ | -------------
 2014 - 2017 | Ph.D in Financial Engineering and Operations Research, The Technical University of Denmark
  | PhD thesis: Tactical Asset Allocation using Stochastic Programming. The thesis covers topics of the parameter estimation risk, alternative risk premia, dimensionality reduction, and stochastic portfolio optimization
-2011-2013 | Master of Science in Mathematical Modelling and Computation, The Technical University of Denmark (DTU)
+2011-2013 | MSc in Mathematical Modelling and Computation, The Technical University of Denmark
  | Master’ thesis: Multi-stage stochastic programming with Drawdown Constrains. Application of different portfolio optimization models, hidden Markov chains, time series analysis and scenario generation.
-2007 - 2011 | Bachelor of Science in Mathematics
- | The Technical University of Denmark (DTU)
+2007 - 2011 | BSc in Mathematics, The Technical University of Denmark
 
-# Additional Achievements and Skills
 ## Programming 
 Python (Expert), R (Expert), Matlab (Advanced), GAMS (Advanced)
 
