@@ -4,15 +4,21 @@ title: Publications
 permalink: /publications/
 ---
 
-This is a list of my publications
+# Publications
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+## Feature Selection for Portfolio Optimization
+[SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2548800)
 
-#You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+## Portfolio Selection Under Supply Chain Predictability
+[SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2755474)
+
+## Portfolio Optimization of Commodity Futures with Seasonal Components and Higher Moments
+[SSRN](hhttps://papers.ssrn.com/sol3/papers.cfm?abstract_id=2869969)
+
+# Ph.D Thesis
+## Thesis
+
+## Defence
+[YouTube](https://www.youtube.com/watch?v=TccVnTlF2Q0)
 
 
-[jekyll-organization]: https://github.com/jekyll
