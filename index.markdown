@@ -4,6 +4,6 @@
 
 layout: home
 ---
-![frontpageimg](/assets/images/seo-thumbnail.jpg)
+![frontpageimg](/assets/images/banner2.png)
 
 
