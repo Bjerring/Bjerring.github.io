@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  "The Yield Curve and it' Components"
+title:  "The Yield Curve and it's Components"
 date:   2019-11-07 18:00:00 +0100
 categories: bonds
 ---
 
 Principal Component Analysis (PCA) is a well-known statistical technique from multivariate analysis used in managing and explaining interest rate risk. 
-Let's first inspect the swap curver over a period of time to qualitatively 
+Let's first inspect the swap curver over a period of time to qualitatively.
 
 ![swap_rates](/assets/images/yield_curve/swap_rates.png)
 
