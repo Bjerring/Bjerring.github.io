@@ -11,10 +11,10 @@ permalink: /publications/
 3. **Portfolio Optimization of Commodity Futures with Seasonal Components and Higher Moments.** Working Paper [SSRN](hhttps://papers.ssrn.com/sol3/papers.cfm?abstract_id=2869969)
 
 ## Ph.D Thesis
-Ph.D Thesis
+
 [Link](/assets/media/Phd_Thesis.pdf)
 
-Defence
+## Defence
 
 [YouTube](https://www.youtube.com/watch?v=TccVnTlF2Q0)
 
