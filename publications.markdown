@@ -12,6 +12,7 @@ permalink: /publications/
 
 ## Ph.D Thesis
 Ph.D Thesis
+[Link](/assets/media/Phd_Thesis.pdf)
 
 Defence
 
