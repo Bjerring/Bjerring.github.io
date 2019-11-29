@@ -6,35 +6,37 @@ categories: bonds
 ---
 
 Principal Component Analysis (PCA) is a well-known statistical technique from multivariate analysis used in managing and explaining interest rate risk. 
-Let's first inspect the swap curver over a period of time to qualitatively.
+Let's first inspect the swap curver over a period of time to qualitatively inspect how it changes over time.
 
 ![swap_rates](/assets/images/yield_curve/swap_rates.png)
 
-By inspection of the swap curve paths above we can see that;
+By inspection of the swap curve paths above we can see that
 1. Prices of swaps are generally moving together,
 2. Longer dated swap prices are moving in almost complete unison,
 3. Shorter dated swap price movements are slightly subdued compared to longer dated swap prices,
 4. Paths are not crossing, so the curve is upward sloping in our period of observation.
 
-The following box-and-whiskers view of the same data gives a flavour of both rate level and dispersion during the period of observation.
+The following box-and-whiskers plot of the same data gives a flavour of both rate level and dispersion during the period of observation.
 
 ![swap_summary](/assets/images/yield_curve/swap_rates_summary.png)
 
 In a box and whiskers plot, the centre line in the box is the median, the edges of the box are the lower and upper quartiles (25th and 75th percentile), whilst the whiskers highlight the last data point within a distance of 1.5 x (upper – lower quartile) from the lower and upper quartiles. Values outside the whiskers are plotted separately as dots and suspected to be outliers.
 
+In addition, we can observe that correlation decreases according to difference in maturity
 ![swap_heatmap](/assets/images/yield_curve/heatmap.png)
 
-# PCA Decomposition
+## PCA Decomposition
 
 The central idea of principal component analysis (PCA) is to reduce the dimensionality of a data set consisting of a large number of interrelated variables, while retaining as much as possible of the variation present in the data set. 
+PCA is often used to explain the drivers of interests rates and the potential risk inherent from these.
 
-We see that the first 3 principal components account for almost all of the variance in the model, and thus we should just be able to use these three components to reconstruct our initial dataset and retain most of the characteristics of it.
+We see that the first 3 principal components account for almost all of the variance in the our data, and thus we should just be able to use these three components to reconstruct our initial dataset while retaining most of the characteristics of it.
 
 ![explained_variance](/assets/images/yield_curve/explained_variance.png)
 
 ![PCA](/assets/images/yield_curve/PCA.png)
 
-One of the key interpretations of PCA applied to interest rates, is the components of the yield curve. We can effectively attribute the first three principal components to:
+One of the key applications of PCA applied to interest rates, is it's ability to split of the yield curve into a set of components. We can effectively attribute the first three principal components to:
 
 1. Parallel shifts in yield curve (shifts across the entire yield curve)
 2. Changes in short/long rates (i.e. steepening/flattening of the curve)
@@ -42,11 +44,22 @@ One of the key interpretations of PCA applied to interest rates, is the componen
 
 ![loadings](/assets/images/yield_curve/factor loadings.png)
 
-One of the key features of PCA is the ability to reconstruct the initial dataset using the outputs of PCA. Using the simple matrix reconstruction, we can generate an approximation/almost exact replica of the initial data.
+To appreciate the terms, level, slope and curvature, it is useful to look at changes in sign of the principal component loadings in the graph above. 
+1. PC1 has the same sign for each maturity, so all rates will move up or down together due to the first principal component (level). 
+2. PC2 has one change in sign, so the shorter maturity rates will move in opposite direction to the longer rates due to the second principal component (slope). 
+3. PC3 has two changes in sign. Here, the shortest and longest maturities move in the same direction, whilst the middle maturities move in the opposite direction (curvature).
 
-# Code
+# Practical Applications
 
-## Quantitative inspection
+Principal component analysis is especially usefull in the following areas.
+1. Explaining PnL – returns on rates products can be explained using level, slope, curvature and residual.
+2. Hedging – appropiate portfolio hedging can be determined by neutralising the movements in the first few principal components.
+3. Relative Value Analysis – the richness/cheapness of the curve can be analysed usingthe residuals of the PCA.
+4. Scenario Analysis – Scenario generation using the three components to evaluate market risk.
+
+## Code
+
+# Quantitative inspection
 
 {% highlight ruby %}
 ### we start by collecting SWAP rates from Bloomberg using the API to the terminal
@@ -86,7 +99,7 @@ plt.figure(figsize=(7,7))
 corr_rates = returns[swap_rates.columns].corr()
 sns.heatmap(corr_rates){% endhighlight %}
 
-## Principle Component Analysis
+# Principle Component Analysis
 
 {% highlight ruby %}
 #####################################################
@@ -119,7 +132,7 @@ plt.xlabel("Principle component 1")
 plt.ylabel("Principle component 2")
 
 # factor loadings
-factor_load = pd.DataFrame( pca.components_.T * np.sqrt(pca.explained_variance_), index=swap_rates.columns,columns = ["level", "slope", "curvature"])
+factor_load = pd.DataFrame( pca.components_.T, index=swap_rates.columns,columns = ["level", "slope", "curvature"])
 
 # plot level, slope and curvature
 factor_load.plot(title="Factor loadings",figsize=(10,5))
