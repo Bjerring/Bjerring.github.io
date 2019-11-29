@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 # Summary
-PhD and MSc in Financial Engineering and Operation Research. Extensive experience with equity research and implementation of systematic strategies focused on smart beta, alternative risk premia and alpha generation. Strong knowledge of feature engineering, machine learning (unsupervised/supervised learning and ensemble methods), risk modelling and portfolio construction.
+PhD and MSc in Financial Engineering and Operation Research. Extensive experience with equity research and implementation of systematic strategies focused on alternative risk premia and alpha generation. Strong knowledge of feature engineering, machine learning (unsupervised/supervised learning and ensemble methods), risk modelling and portfolio construction.
 
 # Key Competences
 Asset Pricing ● Machine Learning ● Operations Research ● Stochastic Optimization ● Asset Management ● Risk Modelling ● Hedge Fund Strategies
@@ -15,7 +15,7 @@ Asset Pricing ● Machine Learning ● Operations Research ● Stochastic Optimi
 Date | Experience
 ------------ | -------------
 2018 - Present | Quantitative Analysist and Portfolio Manager, P+ Pension for Academics
- | Manager selection, implementation and management of L/S systematic equity strategy, digitalization of front office tasks
+ | Manager selection, research, development and management of L/S systematic equity strategy, development of tools to support the portfolio management process
 2016 - 2018 | Portfolio Manager and Co-founder, ANNOX Alternative Investment fund (Lux SICAV-RAIF) 
  | Research, development and management of alternative risk premium strategies within equity, fixed-income, and FX. In addition, establish trading infrstructure for systematic trading.
 2013 | Research Assistant in Energy markets, Technical University of Denmark
