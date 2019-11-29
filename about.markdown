@@ -14,7 +14,8 @@ Asset Pricing ● Machine Learning ● Operations Research ● Stochastic Optimi
 
 Date | Experience
 ------------ | -------------
-2018 - Present | Quantitative Analysist and Portfolio Manager
+2018 - Present | Quantitative Analysist and Portfolio Manager, P+ Pension for Academics
+ | Manager selection, implementation and management of L/S systematic equity strategy, digitalization of front office tasks
 2016 - 2018 | Portfolio Manager and Co-founder, ANNOX Alternative Investment fund (Lux SICAV-RAIF) 
  | Research, development and management of alternative risk premium strategies within equity, fixed-income, and FX. In addition, establish trading infrstructure for systematic trading.
 2013 | Research Assistant in Energy markets, Technical University of Denmark
@@ -35,7 +36,7 @@ Date | Level
 Python (Expert), R (Expert), Matlab (Advanced), GAMS (Advanced)
 
 # Computer Skills
-Microsoft SQL, MySQL, PostgreSQL, Python Dash, R Shiny, AWS, Github, Bloomberg Terminal, TR Eikon, API Programming
+Microsoft SQL, MySQL, PostgreSQL, Python Dash, R Shiny, AWS, Bitbucket/Git, Bloomberg Terminal, TR Eikon, API Programming
 
 # Languages 
 Danish (Native Speaker), English (Professional), German (Elementary)
