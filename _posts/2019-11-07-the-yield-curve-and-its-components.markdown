@@ -26,15 +26,23 @@ In a box and whiskers plot, the centre line in the box is the median, the edges 
 
 # PCA Decomposition
 
+The central idea of principal component analysis (PCA) is to reduce the dimensionality of a data set consisting of a large number of interrelated variables, while retaining as much as possible of the variation present in the data set. 
+
+We see that the first 3 principal components account for almost all of the variance in the model, and thus we should just be able to use these three components to reconstruct our initial dataset and retain most of the characteristics of it.
 
 ![explained_variance](/assets/images/yield_curve/explained_variance.png)
 
-
 ![PCA](/assets/images/yield_curve/PCA.png)
 
+One of the key interpretations of PCA applied to interest rates, is the components of the yield curve. We can effectively attribute the first three principal components to:
+
+1. Parallel shifts in yield curve (shifts across the entire yield curve)
+2. Changes in short/long rates (i.e. steepening/flattening of the curve)
+3. Changes in curvature of the model (twists)
 
 ![loadings](/assets/images/yield_curve/factor loadings.png)
 
+One of the key features of PCA is the ability to reconstruct the initial dataset using the outputs of PCA. Using the simple matrix reconstruction, we can generate an approximation/almost exact replica of the initial data.
 
 # Code
 
@@ -84,10 +92,6 @@ sns.heatmap(corr_rates){% endhighlight %}
 #####################################################
 ### PCA Decomposition
 #####################################################
-
-# The central idea of principal component analysis (PCA) is to reduce the dimensionality 
-# of a data set consisting of a large number of interrelated variables, while retaining 
-# as much as possible of the variation present in the data set. 
 
 # the first three components describe the level, slope and curvature
 
