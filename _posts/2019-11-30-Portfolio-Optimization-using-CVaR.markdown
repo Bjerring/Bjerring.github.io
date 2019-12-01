@@ -31,7 +31,7 @@ $$
 \end{equation}
 $$
 
-![EF](/assets/images/yield_curve/portfolio_cvar/EF.png)
+![EF](/assets/images/portfolio_cvar/EF.png)
 
 
 ## PCA Decomposition

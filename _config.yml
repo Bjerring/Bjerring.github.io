@@ -32,6 +32,7 @@ linkedin_username:  thomas-trier-bjerring
 theme: minima
 plugins:
   - jekyll-feed
+  - MathJax
 
 # Exclude from processing.
 # The following items will not be processed, by default.
