@@ -4,6 +4,7 @@ title:  "Portfolio Optimization using Conditional Value at Risk"
 date:   2019-12-01 18:00:00 +0100
 categories: risk, optimization
 ---
+{% include lib/mathjax.html %}
 
 The heart of risk management is the mitigation of losses, and especially the severe ones which can potentially put the entire invested capital at risk. The Value at Risk (VaR) measurement is specifically made for this purpose. It estimates how much a portfolio of investments might lose for a given level of probability over a fixed period of time period, e.g. a day. VaR is typically used by firms and regulators in the financial industry to gauge the amount of assets needed to cover possible losses, and was adopted at a global scale when it was included in the Basel II Accord. 
 
