@@ -15,7 +15,7 @@ from pandas_datareader import data
 
 #%% functions
 
-def PortfolioRiskTarget(mu,mu_b,scen,scen_b,CVaR_target=1,lamb=1,max_weight=1,min_weight=None,cvar_alpha=0.05):
+def PortfolioRiskTarget(mu,scen,CVaR_target=1,lamb=1,max_weight=1,min_weight=None,cvar_alpha=0.05):
     
     """ This function finds the optimal enhanced index portfolio according to some benchmark. The portfolio corresponds to the tangency portfolio where risk is evaluated according to the CVaR of the tracking error. The model is formulated using fractional programming.
     
@@ -39,24 +39,6 @@ def PortfolioRiskTarget(mu,mu_b,scen,scen_b,CVaR_target=1,lamb=1,max_weight=1,mi
     float
         Asset weights in an optimal portfolio
         
-    Notes
-    -----
-    The tangency mean-CVaR portfolio is effectively optimized as:
-        .. math:: STARR(w) = frac{w^T*mu - mu_b}{CVaR(w^T*scen - scen_b)}
-    This procedure is described in [1]_
-       
-    References
-    ----------
-        .. [1] Stoyanov, Stoyan V., Svetlozar T. Rachev, and Frank J. Fabozzi. "Optimal financial portfolios." Applied Mathematical Finance 14.5 (2007): 401-436.
-       
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> import numpy as np
-    >>> mean = (0.08, 0.09)
-    >>> cov = [[0.19, 0.05], [0.05, 0.18]]
-    >>> scen = pd.dataframe(np.random.multivariate_normal(mean, cov, 100))
-    >>> portfolio = IndexTracker(pd.Series(mean), pd.Series(0), pd.dataframe(scen),pd.Series(0,index=scen.index) )
     """
      
     # define index
@@ -88,19 +70,19 @@ def PortfolioRiskTarget(mu,mu_b,scen,scen_b,CVaR_target=1,lamb=1,max_weight=1,mi
         
     #####################################
     ## define model
-    model = pulp.LpProblem("Enhanced Index Tracker (STAR ratio)", pulp.LpMaximize)
+    model = pulp.LpProblem("Mean-CVaR Optimization", pulp.LpMaximize)
      
     #####################################
     ## Objective Function
              
-    model += lamb*(pulp.lpSum([mu[i] * x[i] for i in i_idx] ) - mu_b ) - (1-lamb)*CVaR
+    model += lamb*(pulp.lpSum([mu[i] * x[i] for i in i_idx] )) - (1-lamb)*CVaR
                       
     #####################################
     # constraint
                       
     # calculate CVaR
     for t in j_idx:
-        model += -pulp.lpSum([ scen.loc[t,i]  * x[i] for i in i_idx] ) + scen_b[t] - VaR <= VarDev[t]
+        model += -pulp.lpSum([ scen.loc[t,i]  * x[i] for i in i_idx] ) - VaR <= VarDev[t]
     
     model += VaR + 1/(N*cvar_alpha)*pulp.lpSum([ VarDev[t] for t in j_idx]) == CVaR    
     
@@ -173,7 +155,7 @@ def PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=
     
     # maximum risk portfolio    
     lamb=1
-    max_risk_port, max_risk_CVaR, max_risk_mu = PortfolioRiskTarget(mu=mu,mu_b=mu_b,scen=scen,scen_b=scen_b,CVaR_target=100,lamb=lamb,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
+    max_risk_port, max_risk_CVaR, max_risk_mu = PortfolioRiskTarget(mu=mu,scen=scen,CVaR_target=100,lamb=lamb,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
     portfolio_ft.loc[ft_points-1,assets] = max_risk_port
     portfolio_ft.loc[ft_points-1,"Mu"] = max_risk_mu
     portfolio_ft.loc[ft_points-1,"CVaR"] = max_risk_CVaR
@@ -181,19 +163,19 @@ def PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=
     
     # minimum risk portfolio
     lamb=0
-    min_risk_port, min_risk_CVaR, min_risk_mu= PortfolioRiskTarget(mu=mu,mu_b=mu_b,scen=scen,scen_b=scen_b,CVaR_target=100,lamb=lamb,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
+    min_risk_port, min_risk_CVaR, min_risk_mu= PortfolioRiskTarget(mu=mu,scen=scen,CVaR_target=100,lamb=lamb,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
     portfolio_ft.loc[0,assets] = min_risk_port
     portfolio_ft.loc[0,"Mu"] = min_risk_mu
     portfolio_ft.loc[0,"CVaR"] = min_risk_CVaR
-    portfolio_ft.loc[0,"STAR"] = np.nan
+    portfolio_ft.loc[0,"STAR"] = min_risk_mu/min_risk_CVaR
     
     # CVaR step size
     step_size = (max_risk_CVaR-min_risk_CVaR)/ft_points # CVaR step size
     
     # calculate all frontier portfolios
-    for i in range(1,ft_points):
+    for i in range(1,ft_points-1):
         CVaR_target = min_risk_CVaR + step_size*i
-        i_risk_port, i_risk_CVaR, i_risk_mu= PortfolioRiskTarget(mu=mu,mu_b=mu_b,scen=scen,scen_b=scen_b, CVaR_target=CVaR_target,lamb=1,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
+        i_risk_port, i_risk_CVaR, i_risk_mu= PortfolioRiskTarget(mu=mu,scen=scen,CVaR_target=CVaR_target,lamb=1,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
         portfolio_ft.loc[i,assets] = i_risk_port
         portfolio_ft.loc[i,"Mu"] = i_risk_mu
         portfolio_ft.loc[i,"CVaR"] = i_risk_CVaR
@@ -229,7 +211,7 @@ cvar_alpha=0.05
 Frontier_port = PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
 
 
-
+Frontier_port
 
 
 

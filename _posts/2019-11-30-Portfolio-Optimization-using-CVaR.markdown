@@ -6,19 +6,22 @@ categories: risk, optimization
 ---
 {% include lib/mathjax.html %}
 
-The heart of risk management is the mitigation of losses, and especially the severe ones which can potentially put the entire invested capital at risk. The Value at Risk (VaR) measurement is specifically made for this purpose. It estimates how much a portfolio of investments might lose for a given level of probability over a fixed period of time period, e.g. a day. VaR is typically used by firms and regulators in the financial industry to gauge the amount of assets needed to cover possible losses, and was adopted at a global scale when it was included in the Basel II Accord. 
+Constructing a portfolio with high risk adjusted returns is all about risk management. Here, the mitigration of large loses is of paramount importance, as gains and losses are asymmetric by nature, e.g. if our portfolio's value drops 10% then we would need to regain 11.1% to neutralize the losses. Conditional Value at Risk is a popular risk measure among professionel investors to quantify the potential of large losses. The metric is computed as the average of the $$\alpha$$ % worst case scenarios over some time frame. The measure is a natural extention of the Value at Risk (VaR) measure proposed in the Basel II Accord. The VaR metric measures the alpha-quantile of some probability distributions. alpha is often put to either 0.01 or 0.05, and hereby says that with 1% or 5% probability, we will not lose more than X amount. 
+The VaR measurement has unfortunately a long range of implications when used in practice, such as assuming that returns are normmally distribution. In addition, the VaR measurement fails to be risk coherent as it lack subadditivity and convexity. Here, subadditivity means that a portfolio's risk cannot be more than the combined risks of the individual positions. Though, in some special cases this statement becomes violated and it becomes mathematical possible to obtain a risk reduction by dividing a portfolio into two sub-portfolios. Intuitively, this does not make any sense and breaks the reason for diversifying a portfolio.
 
-The VaR measurement basically measure the alpha-quantile of some probability distributions. alpha is often put to either 0.01 or 0.05, and hereby says that with 1% or 5% probability, we will not lose more than X amount. The VaR measurement has unfortunately a long range of implications when used in practice. For ones, it require that you have a good representation of the tails of the probability distribution. In addition, it has some undesirable numerical properties which makes it unstable when distributions do not follow a normal distribution, i.e. heavy tails or multimodality. Moreover, the VaR measurement fails to be risk coherent as it lack subadditivity and convexity. Here, subadditivity means that a portfolio's risk cannot be more than the combined risks of the individual positions. Though, in some special cases this statement becomes violated and it becomes mathematical possible to obtain a risk reduction by dividing a portfolio into two sub-portfolios. Intuitively, this does not make sense and breaks the reason for diversifying a portfolio. Hence, the VaR measure might not be the best measure to use when trying to asses potential losses. 
-
+Conditional Value at Risk can be defined as
 $$
 \begin{equation}
-CVaR_{\alpha}(X) = ETL_{\alpha} = E(-X|-X> VaR_{\alpha}(X)),
+CVaR_{\alpha}(X) = E(-X|-X> VaR_{\alpha}(X)),
 \end{equation}
 $$
+and effectively defines the metric as the average of the $$ \alpha $$ worst case scenarios. This can also be visualized like this.
 
 ![CVAR](/assets/images/portfolio_cvar/cvar.png)
 
-Similar to the mean-variance model, we can introduce a risk aversion coefficient lambda to explore the relationship between expected return and CVaR. The mean-CVaR model can then be formulated as
+Conditional Value at Risk is not only convinient as it better identifies the tail risk than VaR, but it also holds desirable numerical properties such as linearity. This means that we easily integrate it in a portfolio optimization framework.  
+Similar to the mean-variance model, we can construct a portfolio which maximizes the expected return of a portfolio for some level of risk, in this case, expressed using CVaR.
+If we introduce a risk aversion coefficient $$ \lambda $$, then we can write the mean-CVaR portfolio optimization model as:
 
 $$
 \begin{equation}
@@ -32,98 +35,240 @@ $$
 \end{equation}
 $$
 
+There exist a quadratic relationship between risk a return. Hence, increasing the riskiness of a portfolio will not nessecarily ofset an equil increase in expected returns.
+
 ![EF](/assets/images/portfolio_cvar/EF.png)
 
+As risk and return is not linearly dependant, then it makes sense to consider the marginal increase in return when increasing the risk. This effectively leads to the maximization of the Sharpe ratio in the mean-variance setting, and the STAR ratio when CVaR is used as risk measure.  
 
-## PCA Decomposition
+## The Efficient Frontier
 
-- INSERT PLOT OF EFFICIENT FRONTIER
-- INSERT TABLE WITH ALLOCATION FOR DIFFERENT FRONTIER POINTS
+To illustrate the application of CVaR in a portfolio setting, then we download data from Yahoo on 5 ETFs tracking four equity markets and one aggregated bond market, repsectively. We use the brilliant Python library PuLP for formulating the linear optimization model, and interatively find the optimal portfolio for different $$ \lambda $$ values.
 
+![EF](/assets/images/portfolio_cvar/EF_emperic.png)
+We can observe that our efficient frontier looks similar to what we would expect. In the beginning, the we have a large increase in return when allowing for a bit more risk, while in the end we gain nearly no increase in expected returns for the same increase in risk.
+
+Let's now observe the portfolio allocation for each frontier point.
+![EF](/assets/images/portfolio_cvar/allocation.png)
+We see that the most risk averse portfolio consist primarily of bonds with a minor allocation to small cap stocks. As we increase the risk level, then our equity allocation increases as well. In the beginning, we primarily allocate to US Large Cap equity, which then changes to US small cap equity towards the more risky portfolios.
+This all makes perfect sense according to economic theory, as bonds should provide the most defensive allocation. Small Cap has on average returned higher profits than large cap, but also contributes with an additional risk to our investment, due to illiquidity, poor capitalization etc. 
+Interestingly, we can see that our most risk averse portfolio consist of BOTH bonds and small cap. Small cap should be the most risk investment, but due to the low correlation between bond returns and small cap returns then we can achieve diversification benefits from including it.
 
 # Practical Applications
 
 
 ## Code
 
-# Quantitative inspection
+# Functions for CVaR Optimization
 
 {% highlight ruby %}
-### we start by collecting SWAP rates from Bloomberg using the API to the terminal
-# SWAP contracts
-swap_instr = ["USSW2 BGN Curncy","USSW3 BGN Curncy","USSW4 BGN Curncy",
-              "USSW5 BGN Curncy","USSW6 BGN Curncy","USSW7 BGN Curncy",
-              "USSW8 BGN Curncy","USSW9 BGN Curncy","USSW10 BGN Curncy",
-              "USSW15 BGN Curncy","USSW20 BGN Curncy","USSW30 BGN Curncy"]
-# start and end date
-date_start = "20180101"
-date_end = "20190101"
 
-# initiate connection to bloomberg and get the data
-con = pdblp.BCon(debug=False, port=8194, timeout=5000000)
-con.start()
-swap_rates = con.bdh(swap_instr, ["PX_LAST",], date_start, date_end)
-swap_rates.columns = swap_rates.columns.droplevel(1)
-swap_rates = swap_rates[swap_instr]
-swap_rates.columns = [i[:-11] for i in swap_rates.columns]
-swap_rates = swap_rates.dropna(axis=0) # remove rows with NA
+#%% packages
 
-# plot SWAP rates
-swap_rates.plot(figsize=(10,5))
+import pulp
+import pandas as pd
+import numpy as np
+from pandas_datareader import data
 
-# plot USD SWAP Rates Summary
-plt.figure(figsize=(10,5))
-plt.boxplot(swap_rates[swap_rates.columns].T,labels=swap_rates.columns)
-plt.xlabel("Maturity")
-plt.ylabel("Rate")
-plt.title("USD Swap Rates Summary")
 
-# calculate price change to observe stationarity
-returns = swap_rates.pct_change()
+#%% functions
 
-# heat plot of correlation
-plt.figure(figsize=(7,7))
-corr_rates = returns[swap_rates.columns].corr()
-sns.heatmap(corr_rates){% endhighlight %}
+def PortfolioRiskTarget(mu,scen,CVaR_target=1,lamb=1,max_weight=1,min_weight=None,cvar_alpha=0.05):
+    
+    """ This function finds the optimal enhanced index portfolio according to some benchmark. The portfolio corresponds to the tangency portfolio where risk is evaluated according to the CVaR of the tracking error. The model is formulated using fractional programming.
+    
+    Parameters
+    ----------
+    mu : pandas.Series with float values
+        asset point forecast
+    mu_b : pandas.Series with float values
+        Benchmark point forecast
+    scen : pandas.DataFrame with float values
+        Asset scenarios
+    scen_b : pandas.Series with float values
+        Benchmark scenarios
+    max_weight : float
+        Maximum allowed weight    
+    cvar_alpha : float
+        Alpha value used to evaluate Value-at-Risk one    
+    
+    Returns
+    -------
+    float
+        Asset weights in an optimal portfolio
+        
+    """
+     
+    # define index
+    i_idx = mu.index
+    j_idx = scen.index
+    
+    # number of scenarios
+    N = scen.shape[0]    
+    
+    # define variables
+    x = pulp.LpVariable.dicts("x", ( (i) for i in i_idx ),
+                                         lowBound=0,
+                                         cat='Continuous') 
+    
+    # loss deviation
+    VarDev = pulp.LpVariable.dicts("VarDev", ( (t) for t in j_idx ),
+                                         lowBound=0,
+                                         cat='Continuous')
+        
+    # value at risk
+    VaR = pulp.LpVariable("VaR",   lowBound=0,
+                                         cat='Continuous')
+    CVaR = pulp.LpVariable("CVaR",   lowBound=0,
+                                         cat='Continuous')
+    
+    # binary variable connected to cardinality constraints
+    b_z = pulp.LpVariable.dicts("b_z",   ( (i) for i in i_idx ),
+                                         cat='Binary')
+        
+    #####################################
+    ## define model
+    model = pulp.LpProblem("Mean-CVaR Optimization", pulp.LpMaximize)
+     
+    #####################################
+    ## Objective Function
+             
+    model += lamb*(pulp.lpSum([mu[i] * x[i] for i in i_idx] )) - (1-lamb)*CVaR
+                      
+    #####################################
+    # constraint
+                      
+    # calculate CVaR
+    for t in j_idx:
+        model += -pulp.lpSum([ scen.loc[t,i]  * x[i] for i in i_idx] ) - VaR <= VarDev[t]
+    
+    model += VaR + 1/(N*cvar_alpha)*pulp.lpSum([ VarDev[t] for t in j_idx]) == CVaR    
+    
+    model += CVaR <= CVaR_target        
+    
+    ### price*number of products cannot exceed budget
+    model += pulp.lpSum([ x[i] for i in i_idx]) == 1    
+                                                
+    ### Concentration limits
+    # set max limits so it cannot not be larger than a fixed value  
+    ###
+    for i in i_idx:
+        model += x[i] <= max_weight
+    
+    ### Add minimum weight constraint, either zero or atleast minimum weight
+    if min_weight is not None:
+    
+        for i in i_idx:           
+            model += x[i] >= min_weight*b_z[i]
+            model += x[i] <= b_z[i]
+        
+    # solve model
+    model.solve()
+    
+    # print an error if the model is not optimal
+    if pulp.LpStatus[model.status] != 'Optimal':
+        print("Whoops! There is an error! The model has error status:" + pulp.LpStatus[model.status] )
+        
+    
+    #Get positions    
+    if pulp.LpStatus[model.status] == 'Optimal':
+     
+        # print variables
+        var_model = dict()
+        for variable in model.variables():
+            var_model[variable.name] = variable.varValue
+         
+        # solution with variable names   
+        var_model = pd.Series(var_model,index=var_model.keys())
+         
+         
+        long_pos = [i for i in var_model.keys() if i.startswith("x") ]
+             
+        # total portfolio with negative values as short positions
+        port_total = pd.Series(var_model[long_pos].values ,index=[t[2:] for t in var_model[long_pos].index])
+    
+        opt_port = port_total
+    
+    # set flooting data points to zero and normalize
+    opt_port[opt_port < 0.000001] = 0
+    opt_port = opt_port/sum(opt_port)
+    
+    # return portfolio, CVaR, and alpha
+    return opt_port, var_model["CVaR"], (sum(mu * port_total) - mu_b)
 
-# Principle Component Analysis
+
+def PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=0.05,ft_points=15):
+
+    # asset names
+    assets = mu.index
+
+    # column names
+    col_names = mu.index.values.tolist() 
+    col_names.extend(["Mu","CVaR","STAR"])
+    # number of frontier points 
+
+    
+    # store portfolios
+    portfolio_ft = pd.DataFrame(columns=col_names,index=list(range(ft_points)))
+    
+    # maximum risk portfolio    
+    lamb=0.99999
+    max_risk_port, max_risk_CVaR, max_risk_mu = PortfolioRiskTarget(mu=mu,scen=scen,CVaR_target=100,lamb=lamb,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
+    portfolio_ft.loc[ft_points-1,assets] = max_risk_port
+    portfolio_ft.loc[ft_points-1,"Mu"] = max_risk_mu
+    portfolio_ft.loc[ft_points-1,"CVaR"] = max_risk_CVaR
+    portfolio_ft.loc[ft_points-1,"STAR"] = max_risk_mu/max_risk_CVaR
+    
+    # minimum risk portfolio
+    lamb=0.00001
+    min_risk_port, min_risk_CVaR, min_risk_mu= PortfolioRiskTarget(mu=mu,scen=scen,CVaR_target=100,lamb=lamb,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
+    portfolio_ft.loc[0,assets] = min_risk_port
+    portfolio_ft.loc[0,"Mu"] = min_risk_mu
+    portfolio_ft.loc[0,"CVaR"] = min_risk_CVaR
+    portfolio_ft.loc[0,"STAR"] = min_risk_mu/min_risk_CVaR
+    
+    # CVaR step size
+    step_size = (max_risk_CVaR-min_risk_CVaR)/ft_points # CVaR step size
+    
+    # calculate all frontier portfolios
+    for i in range(1,ft_points-1):
+        CVaR_target = min_risk_CVaR + step_size*i
+        i_risk_port, i_risk_CVaR, i_risk_mu= PortfolioRiskTarget(mu=mu,scen=scen,CVaR_target=CVaR_target,lamb=1,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
+        portfolio_ft.loc[i,assets] = i_risk_port
+        portfolio_ft.loc[i,"Mu"] = i_risk_mu
+        portfolio_ft.loc[i,"CVaR"] = i_risk_CVaR
+        portfolio_ft.loc[i,"STAR"] = i_risk_mu/i_risk_CVaR
+        
+    return portfolio_ft
+
+{% endhighlight %}
+
+# Download of Data and CVaR Optimization
 
 {% highlight ruby %}
-#####################################################
-### PCA Decomposition
-#####################################################
+# We download closing prices for the period 01/01/2000 to 12/31/2016.
+start_date = '2010-01-01'
+end_date = '2018-12-31'
 
-# the first three components describe the level, slope and curvature
+# tickers
+tickers = ["SPY","IJS","EFA","EEM","AGG"]
 
-#Get the standardized data
-standardized_data = StandardScaler().fit_transform(swap_rates)
+# User pandas_reader.data.DataReader to load the desired data.
+panel_data = data.DataReader(tickers, 'yahoo', start_date, end_date)
+df_close = panel_data["Adj Close"]
 
-N_com = 3                       # number of components
-pca = PCA(n_components=N_com)   # PCA
-swap_rates_pca = pca.fit_transform(standardized_data)
-PCA_df = pd.DataFrame(data = swap_rates_pca, columns = ["PC"+str(i) for i in range(1,N_com+1) ] ,index=swap_rates.index)
+# monthly returns from daily prices, and remove the first row as it is NA
+df_ret = df_close.resample('M').last().pct_change().iloc[1:]
 
-# plot the principle component over time
-PCA_df.plot(figsize=(10,5))
+#%% compute the optimal portfolio outperforming zero percentage return
 
-# amount of variance explained by each component
-plt.figure(figsize=(10,5))
-plt.bar(range(1,N_com+1), pca.explained_variance_ratio_,align="center" )
-plt.xticks(range(1,N_com+1),["PC"+str(i) for i in range(1,N_com+1) ])
-plt.title("Variance explained by each component")
+mu = df_ret.mean()
+mu_b = 0
+scen = df_ret
+scen_b = pd.Series(0,index=df_ret.index)
+min_weight = 0
+cvar_alpha=0.05
+Frontier_port = PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
 
-# first and second principle component plottet against each other
-plt.figure(figsize=(7,7))
-plt.scatter(x = PCA_df["PC1"],y=PCA_df["PC2"])
-plt.xlabel("Principle component 1")
-plt.ylabel("Principle component 2")
-
-# factor loadings
-factor_load = pd.DataFrame( pca.components_.T, index=swap_rates.columns,columns = ["level", "slope", "curvature"])
-
-# plot level, slope and curvature
-factor_load.plot(title="Factor loadings",figsize=(10,5))
-plt.ylabel("Weight")
-plt.xlabel("Maturity")
 
 {% endhighlight %}
