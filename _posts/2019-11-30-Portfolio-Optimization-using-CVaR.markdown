@@ -61,6 +61,36 @@ Interestingly, we can see that our most risk averse portfolio consist of BOTH bo
 
 ## Code
 
+# Download of Data and CVaR Optimization
+
+{% highlight ruby %}
+# We download closing prices for the period 01/01/2000 to 12/31/2016.
+start_date = '2010-01-01'
+end_date = '2018-12-31'
+
+# tickers
+tickers = ["SPY","IJS","EFA","EEM","AGG"]
+
+# User pandas_reader.data.DataReader to load the desired data.
+panel_data = data.DataReader(tickers, 'yahoo', start_date, end_date)
+df_close = panel_data["Adj Close"]
+
+# monthly returns from daily prices, and remove the first row as it is NA
+df_ret = df_close.resample('M').last().pct_change().iloc[1:]
+
+#%% compute the optimal portfolio outperforming zero percentage return
+
+mu = df_ret.mean()
+mu_b = 0
+scen = df_ret
+scen_b = pd.Series(0,index=df_ret.index)
+min_weight = 0
+cvar_alpha=0.05
+Frontier_port = PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
+
+
+{% endhighlight %}
+
 # Functions for CVaR Optimization
 
 {% highlight ruby %}
@@ -245,32 +275,3 @@ def PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=
 
 {% endhighlight %}
 
-# Download of Data and CVaR Optimization
-
-{% highlight ruby %}
-# We download closing prices for the period 01/01/2000 to 12/31/2016.
-start_date = '2010-01-01'
-end_date = '2018-12-31'
-
-# tickers
-tickers = ["SPY","IJS","EFA","EEM","AGG"]
-
-# User pandas_reader.data.DataReader to load the desired data.
-panel_data = data.DataReader(tickers, 'yahoo', start_date, end_date)
-df_close = panel_data["Adj Close"]
-
-# monthly returns from daily prices, and remove the first row as it is NA
-df_ret = df_close.resample('M').last().pct_change().iloc[1:]
-
-#%% compute the optimal portfolio outperforming zero percentage return
-
-mu = df_ret.mean()
-mu_b = 0
-scen = df_ret
-scen_b = pd.Series(0,index=df_ret.index)
-min_weight = 0
-cvar_alpha=0.05
-Frontier_port = PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
-
-
-{% endhighlight %}
