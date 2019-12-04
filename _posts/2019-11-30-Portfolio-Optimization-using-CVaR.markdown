@@ -37,7 +37,9 @@ $$
 
 There exist a quadratic relationship between risk a return. Hence, increasing the riskiness of a portfolio will not nessecarily ofset an equil increase in expected returns.
 
-![EF](/assets/images/portfolio_cvar/EF.png)
+<p align="center">
+  <img src="/assets/images/portfolio_cvar/EF.png">
+</p>
 
 As risk and return is not linearly dependant, then it makes sense to consider the marginal increase in return when increasing the risk. This effectively leads to the maximization of the Sharpe ratio in the mean-variance setting, and the STAR ratio when CVaR is used as risk measure.  
 
