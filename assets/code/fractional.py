@@ -10,6 +10,7 @@ Created on Fri Nov 29 14:09:18 2019
 import pulp
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from pandas_datareader import data
 
 #%% functions
@@ -186,6 +187,8 @@ df_close = panel_data["Adj Close"]
 df_ret = df_close.resample('M').last().pct_change().iloc[1:]
 
 #%% compute the optimal portfolio outperforming zero percentage return
+import matplotlib.dates as mdates
+import datetime
 
 mu = df_ret.mean()
 mu_b = 0
@@ -201,7 +204,8 @@ port_ret_zero = df_ret.dot(OptPort_zero)
 # cumulative return of the portfolio
 fig, ax = plt.subplots(figsize=(10,5))
 ax.plot((1+port_ret_zero).cumprod())
-ax.text(0.5, 0.5, r'an equation: $E=mc^2$', fontsize=15)
+ax.annotate('Annual Return ' + str(round((100*port_ret_zero.mean()*12),2)), (mdates.date2num(datetime.datetime(2010,2,28)), 1.5))
+ax.annotate('Volatility ' + str(round((100*port_ret_zero.std()*np.sqrt(12)),2)), (mdates.date2num(datetime.datetime(2010,2,28)), 1.45))
 plt.show()
 
 
@@ -215,6 +219,7 @@ port_ret_zero.loc[port_ret_zero <= port_ret_zero.quantile(0.05)].mean()
 port_ret_zero.mean()/port_ret_zero.std()*np.sqrt(12)
 
 #%% compute the optimal portfolio outperforming zero percentage return
+
 
 mu = df_ret.mean()
 mu_b = df_ret.mean().mean()
@@ -239,6 +244,13 @@ port_ret_1N.loc[port_ret_1N <= port_ret_1N.quantile(0.05)].mean()
 # sharpe ratio
 port_ret_1N.mean()/port_ret_1N.std()*np.sqrt(12)
 
+fig, ax = plt.subplots(figsize=(10,5))
+ax.plot((1+port_ret_1N).cumprod())
+ax.annotate('Annual Return ' + str(round((100*port_ret_1N.mean()*12),2)), (mdates.date2num(datetime.datetime(2010,2,28)), 2.75))
+ax.annotate('Volatility ' + str(round((100*port_ret_1N.std()*np.sqrt(12)),2)), (mdates.date2num(datetime.datetime(2010,2,28)), 2.60))
+plt.show()
+
+
 
 #%% Which are best? what if we can apply leverage
 
@@ -249,14 +261,23 @@ risk_ratio = port_ret_1N.std()/port_ret_zero.std()
 financing_rate = 0
 
 # horse race
-(1+risk_ratio*port_ret_zero - financing_rate).cumprod().plot()
-(1+port_ret_1N).cumprod().plot()
+fig, ax = plt.subplots(figsize=(10,5))
+ax.plot((1+port_ret_zero).cumprod(),label="More than zero")
+ax.plot((1+port_ret_1N).cumprod(),label="More than the equal weighted")
+ax.set_title("Horse race")
+ax.legend(loc="upper left")
+plt.show()
 
 # break-even financing rate 
 financing_rate = (risk_ratio*port_ret_zero).mean() - port_ret_1N.mean()
+
 # horse race
-(1+risk_ratio*port_ret_zero - financing_rate).cumprod().plot()
-(1+port_ret_1N).cumprod().plot()
+fig, ax = plt.subplots(figsize=(10,5))
+ax.plot((1+risk_ratio*port_ret_zero).cumprod(),label="More than zero")
+ax.plot((1+port_ret_1N).cumprod(),label="More than the equal weighted")
+ax.set_title("Horse race")
+ax.legend(loc="upper left")
+plt.show()
 
 
 #%%

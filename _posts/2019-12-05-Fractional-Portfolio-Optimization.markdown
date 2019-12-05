@@ -10,7 +10,7 @@ $$
 \begin{equation}
 \begin{array}{rrclcl}
 \displaystyle \max &   \sum\limits_{i=1}^{n} x_i\mu_i - \mu^b \tau \\
-\textrm{s.t.}& \xi^{\alpha} + \frac{1}{S \alpha}\sum_{s = 1}^{S} y_{s}^{+} & <= & 1 \\
+\textrm{s.t.}& \xi^{\alpha} + \frac{1}{S \alpha}\sum_{s = 1}^{S} y_{s}^{+} & \leq & 1 \\
  & \displaystyle  -\sum_{i=1}^n x_i r_{i,s} - scen_s^b \tau -  \xi^{\alpha} & \leq & y_{s}^{+} &&  \\
 & \sum\limits_{i=1}^{n} x_i & = & \tau \\
 & x_i,y_s^+, \tau_s & \geq & 0, \\
