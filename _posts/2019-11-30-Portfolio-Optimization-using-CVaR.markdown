@@ -61,8 +61,6 @@ We see that the most risk averse portfolio consist primarily of bonds with a min
 This all makes perfect sense according to economic theory, as bonds should provide the most defensive allocation. Small Cap has on average returned higher profits than large cap, but also contributes with an additional risk to our investment, due to illiquidity, poor capitalization etc. 
 Interestingly, we can see that our most risk averse portfolio consist of BOTH bonds and small cap. Small cap should be the most risk investment, but due to the low correlation between bond returns and small cap returns then we can achieve diversification benefits from including it.
 
-# Practical Applications
-
 
 ## Code
 

@@ -136,10 +136,10 @@ def PortfolioRiskTarget(mu,scen,CVaR_target=1,lamb=1,max_weight=1,min_weight=Non
     opt_port = opt_port/sum(opt_port)
     
     # return portfolio, CVaR, and alpha
-    return opt_port, var_model["CVaR"], (sum(mu * port_total) - mu_b)
+    return opt_port, var_model["CVaR"], sum(mu * port_total)
 
 
-def PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=0.05,ft_points=15):
+def PortfolioLambda(mu,scen,max_weight=1,min_weight=None,cvar_alpha=0.05,ft_points=15):
 
     # asset names
     assets = mu.index
@@ -154,7 +154,7 @@ def PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=
     portfolio_ft = pd.DataFrame(columns=col_names,index=list(range(ft_points)))
     
     # maximum risk portfolio    
-    lamb=1
+    lamb=0.99999
     max_risk_port, max_risk_CVaR, max_risk_mu = PortfolioRiskTarget(mu=mu,scen=scen,CVaR_target=100,lamb=lamb,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
     portfolio_ft.loc[ft_points-1,assets] = max_risk_port
     portfolio_ft.loc[ft_points-1,"Mu"] = max_risk_mu
@@ -162,7 +162,7 @@ def PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=
     portfolio_ft.loc[ft_points-1,"STAR"] = max_risk_mu/max_risk_CVaR
     
     # minimum risk portfolio
-    lamb=0
+    lamb=0.00001
     min_risk_port, min_risk_CVaR, min_risk_mu= PortfolioRiskTarget(mu=mu,scen=scen,CVaR_target=100,lamb=lamb,max_weight=max_weight,min_weight=min_weight,cvar_alpha=cvar_alpha)
     portfolio_ft.loc[0,assets] = min_risk_port
     portfolio_ft.loc[0,"Mu"] = min_risk_mu
@@ -191,7 +191,7 @@ start_date = '2010-01-01'
 end_date = '2018-12-31'
 
 # tickers
-tickers = ["SPY","IJS","EFA","EEM","AGG"]
+tickers = ["SPY","IJR","EFA","EEM","AGG"]
 
 # User pandas_reader.data.DataReader to load the desired data.
 panel_data = data.DataReader(tickers, 'yahoo', start_date, end_date)
@@ -203,16 +203,15 @@ df_ret = df_close.resample('M').last().pct_change().iloc[1:]
 #%% compute the optimal portfolio outperforming zero percentage return
 
 mu = df_ret.mean()
-mu_b = 0
 scen = df_ret
-scen_b = pd.Series(0,index=df_ret.index)
 min_weight = 0
 cvar_alpha=0.05
-Frontier_port = PortfolioLambda(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
+Frontier_port = PortfolioLambda(mu,scen,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
 
 
-Frontier_port
+Frontier_port[["CVaR","Mu"]].plot(x="CVaR",y="Mu",label="Efficient Frontier",title="Risk-Reward",figsize=(10,5))
+plt.show()
 
-
-
+Frontier_port[tickers].plot.bar(stacked=True,title="Allocation vs Efficient Points",figsize=(10,5))
+plt.show()
 

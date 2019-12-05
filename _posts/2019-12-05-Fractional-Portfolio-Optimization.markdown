@@ -1,18 +1,85 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 29 14:09:18 2019
+---
+layout: post
+title:  "Fractional Portfolio Optimization"
+date:   2019-12-05 18:00:00 +0100
+categories: optimization
+---
+{% include lib/mathjax.html %}
 
-@author: ttb
-"""
+$$
+\begin{equation}
+\begin{array}{rrclcl}
+\displaystyle \max &   \sum\limits_{i=1}^{n} x_i\mu_i - \mu^b \tau \\
+\textrm{s.t.}& \xi^{\alpha} + \frac{1}{S \alpha}\sum_{s = 1}^{S} y_{s}^{+} & <= & 1 \\
+ & \displaystyle  -\sum_{i=1}^n x_i r_{i,s} - scen_s^b \tau -  \xi^{\alpha} & \leq & y_{s}^{+} &&  \\
+& \sum\limits_{i=1}^{n} x_i & = & \tau \\
+& x_i,y_s^+, \tau_s & \geq & 0, \\
+\end{array}
+\end{equation}
+$$
 
-#%%
+![CVAR](/assets/images/fractional/efficient_frontier.png)
+
+![CVAR](/assets/images/fractional/return_0.png)
+
+![CVAR](/assets/images/fractional/return_0.png)
+
+![CVAR](/assets/images/fractional/return_1N.png)
+
+![CVAR](/assets/images/fractional/horserace_leveraged.png)
+
+
+## Code
+
+# Download of Data and CVaR Optimization
+
+{% highlight ruby %}
+import pulp
+import pandas as pd
+import numpy as np
+from pandas_datareader import data
+
+# We would like all available data from 01/01/2000 until 12/31/2016.
+start_date = '2010-01-01'
+end_date = '2018-12-31'
+
+# tickers
+tickers = ["SPY","IJS","EFA","EEM","AGG"]
+
+# User pandas_reader.data.DataReader to load the desired data.
+panel_data = data.DataReader(tickers, 'yahoo', start_date, end_date)
+df_close = panel_data["Adj Close"]
+
+# monthly returns from daily prices, and remove the first row as it is NA
+df_ret = df_close.resample('M').last().pct_change().iloc[1:]
+
+#%% compute the optimal portfolio outperforming zero percentage return
+
+mu = df_ret.mean()
+mu_b = 0
+scen = df_ret
+scen_b = pd.Series(0,index=df_ret.index)
+min_weight = 0
+cvar_alpha=0.05
+OptPort_zero = MeanCVaR(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
+
+
+{% endhighlight %}
+
+# Functions for CVaR Optimization
+
+{% highlight ruby %}
+
+#%% packages
 
 import pulp
 import pandas as pd
 import numpy as np
 from pandas_datareader import data
 
+
 #%% functions
+
 
 def MeanCVaR(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=0.05):
         
@@ -167,113 +234,5 @@ def MeanCVaR(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=0.05):
         opt_port[opt_port < 0.00001] = 0 # get rid of floating numbers
             
     return opt_port
-    
-
-#%%
-
-# We would like all available data from 01/01/2000 until 12/31/2016.
-start_date = '2010-01-01'
-end_date = '2018-12-31'
-
-# tickers
-tickers = ["SPY","IJS","EFA","EEM","AGG"]
-
-# User pandas_reader.data.DataReader to load the desired data.
-panel_data = data.DataReader(tickers, 'yahoo', start_date, end_date)
-df_close = panel_data["Adj Close"]
-
-# monthly returns from daily prices, and remove the first row as it is NA
-df_ret = df_close.resample('M').last().pct_change().iloc[1:]
-
-#%% compute the optimal portfolio outperforming zero percentage return
-
-mu = df_ret.mean()
-mu_b = 0
-scen = df_ret
-scen_b = pd.Series(0,index=df_ret.index)
-min_weight = 0
-cvar_alpha=0.05
-OptPort_zero = MeanCVaR(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
-
-# historic portfolio return
-port_ret_zero = df_ret.dot(OptPort_zero)
-
-# cumulative return of the portfolio
-fig, ax = plt.subplots(figsize=(10,5))
-ax.plot((1+port_ret_zero).cumprod())
-ax.text(0.5, 0.5, r'an equation: $E=mc^2$', fontsize=15)
-plt.show()
-
-
-# average monthly return
-mu.dot(OptPort_zero)
-
-# average monthly CVaR
-port_ret_zero.loc[port_ret_zero <= port_ret_zero.quantile(0.05)].mean()
-
-# sharpe ratio
-port_ret_zero.mean()/port_ret_zero.std()*np.sqrt(12)
-
-#%% compute the optimal portfolio outperforming zero percentage return
-
-mu = df_ret.mean()
-mu_b = df_ret.mean().mean()
-scen = df_ret
-scen_b = df_ret.mean(axis=1)
-min_weight = 0
-cvar_alpha=0.05
-OptPort_1N = MeanCVaR(mu,mu_b,scen,scen_b,max_weight=1,min_weight=None,cvar_alpha=cvar_alpha)
-
-# historic portfolio return
-port_ret_1N = df_ret.dot(OptPort_1N)
-
-# cumulative return of the portfolio
-(1+port_ret_1N).cumprod().plot()
-
-# average monthly return
-mu.dot(OptPort_1N)
-
-# average monthly CVaR
-port_ret_1N.loc[port_ret_1N <= port_ret_1N.quantile(0.05)].mean()
-
-# sharpe ratio
-port_ret_1N.mean()/port_ret_1N.std()*np.sqrt(12)
-
-
-#%% Which are best? what if we can apply leverage
-
-# leverage
-risk_ratio = port_ret_1N.std()/port_ret_zero.std()
-
-# assuming zero financing rate
-financing_rate = 0
-
-# horse race
-(1+risk_ratio*port_ret_zero - financing_rate).cumprod().plot()
-(1+port_ret_1N).cumprod().plot()
-
-# break-even financing rate 
-financing_rate = (risk_ratio*port_ret_zero).mean() - port_ret_1N.mean()
-# horse race
-(1+risk_ratio*port_ret_zero - financing_rate).cumprod().plot()
-(1+port_ret_1N).cumprod().plot()
-
-
-#%%
-
-opt_sol = pd.DataFrame({"Mu":(OptPort_zero*mu).sum(),
-              "CVaR":-port_ret_zero[port_ret_zero <= port_ret_zero.quantile(0.05)].mean()},index=[0])
-
-fig, ax = plt.subplots(figsize=(10,5))
-ax.scatter(y=Frontier_port["Mu"],x=Frontier_port["CVaR"],label="Efficient Frontier")
-#ax.plot(y=Frontier_port["Mu"],x=Frontier_port["CVaR"],label="Efficient Frontier")
-ax.scatter(y=opt_sol["Mu"],x=opt_sol["CVaR"],label="Fractional Solution",color ="red",s=75)
-ax.set_title("Risk-Reward")
-ax.legend(loc="upper left")
-plt.show()
-
-Frontier_port[["CVaR","Mu"]].plot(x="CVaR",y="Mu",label="Efficient Frontier",style='.-')
-opt_sol.plot.scatter(x="CVaR",y="Mu",label="Fractional Solution",color ="red",s=10)
-
-
+{% endhighlight %}
 
