@@ -9,7 +9,7 @@ categories: optimization
 We often wish to find the portfolio with the highest risk-adjusted return, as we can leverage (or de-leverage) it to optain superior returns compared to any other portfolio. 
 I showed in [link](https://bjerring.github.io/risk,/optimization/2019/12/01/Portfolio-Optimization-using-CVaR.html) how to find this portfolio by solving a portfolio optimization problem for different risk aversion coefficients.
 Interestingly, we can actually find the optimal portfolio in one go instead of solving the model multiple times. This is done using a technique called fractional programming.
-The method works by mapping the problem into another space and introducing an auxiliary variable $$\tau$$. In the special case where we wish to maximize one objective and minimize another, and where the two functions are convex and concave, respectively, then we can apply fractional programming, i.e. This is the case for portfolio optimization.
+The method works by mapping the problem into another space and introducing an auxiliary variable $$\tau$$. Though, certain requirements needs to be satisfied for us to be able to do that. We need two objectives, where one seeks to maximize a concave function and another miminizing a convex function, respectively, i.e. This is the case for portfolio optimization where we maximize returns (concave) and minimize risk (convex).
 
 If we use the mean-CVaR from earlier, then we can write the fractional formulation of the model as
 
@@ -25,9 +25,9 @@ $$
 \end{equation}
 $$
 
-where $$x_i$$ is the fraction to be invest in each asset and $$\mu_i$$ and $$\mu_i^b$$ is the expected return of each asset and a benchmark. $$\xi^{\alpha}$$ is Value at Risk, $$\y_s^{+}$$ is an auxilirary variable, and $$scen_{i,s}$$ is our scenarios.
+where $$x_i$$ is the fraction to be invested in each asset, and $$\mu_i$$ and $$\mu_i^b$$ is the expected return of each asset and a benchmark, respectively. $$\xi^{\alpha}$$ is the Value at Risk, $$\y_s^{+}$$ is an auxilirary variable, and $$scen_{i,s}$$ is our scenarios.
 
-If we use the efficient frontier from earlier and compute the optimal fractional portfolio with a benchmark of 0% return, then we can observe that that it lies very much to the left on the risk scale.
+If we use the efficient frontier from earlier and compute the optimal fractional portfolio with a benchmark of 0% return, then we can observe that that it lies very much to the left on the risk scale. The portfolio consist of 82% bonds, 15% S&P500 and 3% small cap, hence, a very risk averse portfolio.
 
 ![CVAR](/assets/images/fractional/efficient_frontier.png)
 
@@ -39,16 +39,18 @@ Now, if we instead defined the benchmark as the 1/N portfolio, hence, equally we
 
 ![CVAR](/assets/images/fractional/return_1N.png)
 
-The fractional mean-CVaR model is actually a form of enhanced index tracker model, where we seek to construct a model which tracks some index (the benchmark), but also seeks to outperform it.
+Here, the portfolio consist of 80% S&P 500, 13% Emerging Market and 7% in global large cap excluding US and Canada.
+
+The benchmark in the model can be seen as a return requirement, and the optimal portfolio is the portfolio which is most likely to outperform it. In this way, the fractional mean-CVaR model can actually be looked at as a form of enhanced index tracking, where we seek to construct a model which tracks some index (the benchmark), but also seeks to outperform it.
 
 So far, we have not introduced leverage into the model. The first portfolio has much higher risk adjusted returns than the second one, which mean that we can leverage it to deliver superior returns for the same amount of risk assuming that it is free to borrow money.
 We need to leverage the first portfolio approximately 4x to obtain the same amount of risk as the second one.
 
-If we construct an insample horse race between the two strategies, then we get the following
+If we construct an insample horse race between the two strategies where the strategies has equal risk, then we get the following
 
 ![CVAR](/assets/images/fractional/horserace_leveraged.png)
 
-It is observed that we can greatly outperform the stock heavy portfolio using a very low risk bond heavy portfolio when applying leverage. This is assuming that we don't have to pay for our financing. In reality, leverage is not free but when applied under the right curcumstances can lead to enhanced absolute and risk adjusted returns.
+It can be observed that we can greatly outperform the stock heavy portfolio using a very low risk bond heavy portfolio when applying leverage. This is assuming that we don't have to pay for our financing. In reality, leverage is not free but when applied under the right curcumstances can lead to enhanced absolute and risk adjusted returns.
 
 ## Code
 
