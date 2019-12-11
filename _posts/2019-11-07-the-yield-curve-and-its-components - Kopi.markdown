@@ -6,7 +6,7 @@ categories: bonds
 ---
 
 Principal Component Analysis (PCA) is a well-known statistical technique from multivariate analysis used in managing and explaining interest rate risk. 
-Let's first inspect the swap curver over a period of time to qualitatively inspect how it changes over time.
+As inspiration, Let's first inspect the swap curver to qualitatively inspect how it changes over time.
 
 ![swap_rates](/assets/images/yield_curve/swap_rates.png)
 
@@ -20,9 +20,9 @@ The following box-and-whiskers plot of the same data gives a flavour of both rat
 
 ![swap_summary](/assets/images/yield_curve/swap_rates_summary.png)
 
-In a box and whiskers plot, the centre line in the box is the median, the edges of the box are the lower and upper quartiles (25th and 75th percentile), whilst the whiskers highlight the last data point within a distance of 1.5 x (upper – lower quartile) from the lower and upper quartiles. Values outside the whiskers are plotted separately as dots and suspected to be outliers.
+In a box and whiskers plot, the centre line in the box is the median, the edges of the box are the lower and upper quartiles (25th and 75th percentile), whilst the whiskers highlight the last data point within a distance of 1.5 x (upper – lower quartile) from the lower and upper quartiles.
 
-In addition, we can observe that correlation decreases according to difference in maturity
+In addition, we can observe that the correlation decreases according to difference in maturity
 ![swap_heatmap](/assets/images/yield_curve/heatmap.png)
 
 ## PCA Decomposition
@@ -36,7 +36,7 @@ We see that the first 3 principal components account for almost all of the varia
 
 ![PCA](/assets/images/yield_curve/PCA.png)
 
-One of the key applications of PCA applied to interest rates, is it's ability to split of the yield curve into a set of components. We can effectively attribute the first three principal components to:
+One of the key applications of PCA applied to interest rates, is it's ability to split the yield curve into a set of components. We can effectively attribute the first three principal components to:
 
 1. Parallel shifts in yield curve (shifts across the entire yield curve)
 2. Changes in short/long rates (i.e. steepening/flattening of the curve)
@@ -44,7 +44,7 @@ One of the key applications of PCA applied to interest rates, is it's ability to
 
 ![loadings](/assets/images/yield_curve/factor loadings.png)
 
-To appreciate the terms, level, slope and curvature, it is useful to look at changes in sign of the principal component loadings in the graph above. 
+To appreciate the terms; level, slope and curvature, then it is useful to look at changes in the sign of the principal component loadings in the graph above. 
 1. PC1 has the same sign for each maturity, so all rates will move up or down together due to the first principal component (level). 
 2. PC2 has one change in sign, so the shorter maturity rates will move in opposite direction to the longer rates due to the second principal component (slope). 
 3. PC3 has two changes in sign. Here, the shortest and longest maturities move in the same direction, whilst the middle maturities move in the opposite direction (curvature).
