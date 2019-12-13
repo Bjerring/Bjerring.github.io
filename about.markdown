@@ -7,7 +7,7 @@ permalink: /about/
 PhD and MSc in Financial Engineering and Operation Research. Extensive experience with equity research and implementation of systematic strategies focused on alternative risk premia and alpha generation. Strong knowledge of feature engineering, machine learning (unsupervised/supervised learning and ensemble methods), risk modelling and portfolio construction.
 
 # Key Competences
-Asset Pricing ● Machine Learning ● Operations Research ● Stochastic Optimization ● Asset Management ● Risk Modelling ● Hedge Fund Strategies
+Computational Finance ● Machine Learning ● Operations Research ● Stochastic Optimization ● Asset Management ● Risk Modelling ● Hedge Fund Strategies
 
 
 # Work Experience
@@ -15,9 +15,9 @@ Asset Pricing ● Machine Learning ● Operations Research ● Stochastic Optimi
 Date | Experience
 ------------ | -------------
 2018 - Present | Quantitative Analysist and Portfolio Manager, P+ Pension for Academics
- | Manager selection, research, development and management of L/S systematic equity strategy, development of tools and automation of tasks to support the general portfolio management process
+ | Manager selection, development and management of systematic alpha capture strategy, development of tools and automation of tasks supporting the general portfolio management process
 2016 - 2018 | Portfolio Manager and Co-founder, ANNOX Alternative Investment fund (Lux SICAV-RAIF) 
- | Research, development and management of alternative risk premium strategies within equity, fixed-income, and FX. In addition, establish trading infrstructure for systematic and autonomous trading.
+ | Research, development and management of alternative risk premium strategies within equity, fixed-income, and FX. In addition, establish trading infrastructure for systematic and autonomous trading.
 2013 | Research Assistant in Energy markets, Technical University of Denmark
  | Research position focused on development of models for decision-making and trading in the Nordic power markets.
 2013 - 2016 | Co-founder of Robust Investment Systems, Fintech Consulting company
