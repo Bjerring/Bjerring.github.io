@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Scenario Generation using Bootstrapping"
+title:  "Scenario Generation and Moment Matching"
 date:   2019-12-12 18:00:00 +0100
 categories: ScenarioGeneration
 ---
