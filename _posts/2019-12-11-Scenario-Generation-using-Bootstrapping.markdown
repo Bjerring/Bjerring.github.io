@@ -1,10 +1,12 @@
 ---
 layout: post
 title:  "Scenario Generation using Bootstrapping"
-date:   2019-12-12 18:00:00 +0100
+date:   2019-12-11 18:00:00 +0100
 categories: ScenarioGeneration
 ---
 {% include lib/mathjax.html %}
+
+We often want to asses the riskiness of a single investment or portfolio. This require 
 
 We often wish to find the portfolio with the highest risk-adjusted return, as we can leverage (or de-leverage) it to optain superior returns compared to any other portfolio. 
 I showed in [link](https://bjerring.github.io/risk,/optimization/2019/12/01/Portfolio-Optimization-using-CVaR.html) how to find this portfolio by solving a portfolio optimization problem for different risk aversion coefficients.
