@@ -122,7 +122,7 @@ BBtail = Boot.BBscenario_sequential(dat_avail=df_ret)
 n_ahead = 20
 block_size = 5
 mean = df_ret.shape[0]-block_size
-sd = np.std(range(mean)) #mean*sd_fraction
+sd = np.std(range(mean))
 low = 0
 upp = mean
 random.seed(2019)
@@ -133,11 +133,14 @@ t_bars = tcn.rvs( 10000 ).astype(int)
 plt.hist(t_bars,bins=30)
 
 
+## plot historical monthly returns
+sns.jointplot(x="EEM", y="SPY", data=df_close.resample('M').last().pct_change().iloc[1:] )
+
 ## plot block bootstrapped scenarios
 sns.jointplot(x="EEM", y="SPY", data=BBscen)
 
 ## plot truncated block bootstrapped scenarios
-sns.jointplot(x="EEM", y="SPY", data=BBtail,figsize=(10,5))
+sns.jointplot(x="EEM", y="SPY", data=BBtail)
 
 
 
