@@ -6,43 +6,41 @@ categories: ScenarioGeneration
 ---
 {% include lib/mathjax.html %}
 
-In stochastic programming, the randomness of a stochastic process is often represented by a set of scenarios, where a scenario is a expected realization of a 
-multivariate random variable. A large variety of different methods have been suggested for the generation of scenarios. They range from the simple historical 
-approach, where we take past observations as a representation of future outcomes, to more complex methods based on random sampling from historical data 
-(Bootstrap methods) or on randomly sampling from a chosen distribution function of a multivariate random variable (Monte Carlo simulation) or, again, 
-forecasting methods [link](https://edoc.hu-berlin.de/bitstream/handle/18452/8948/100.pdf?sequence=1).
+In [link](https://bjerring.github.io/scenariogeneration/2019/12/11/Scenario-Generation-using-Bootstrapping.html), I showed that we could approximate the randomness of a stochastic process using a set of scenarios, where a scenario is a potential realization of a 
+multivariate random variable. A large variety of different methods have been suggested for the generation of scenarios. They range from using simple historical 
+returns to more complex methods based on random sampling from historical data (Bootstrap methods) or Monte Carlo simulation or, again, forecasting methods [link](https://edoc.hu-berlin.de/bitstream/handle/18452/8948/100.pdf?sequence=1).
 
 In general, a set of scenarios approximating a stochastic process of financial returns can be described using an index $$s$$ associated to each scenario, 
 with $$s = 1, ... , S$$, where $$S$$ is the total number of scenarios. Given $$n$$ assets, a scenario consists of $$n$$ return realizations, one for each asset. 
-The $$s'th$$ realization is then the rate of return of asset $$i$$ as its realization under scenario $$s$$. A portfolio's expected return and risk is then be 
-evaluated on $$S$$ mutually exclusive scenarios $$s = 1, ... , S$$, each of which occurring with probability $$p_s$$
+The $$s'th$$ realization is then the rate of return of asset $$i$$ as its realization under scenario $$s$$. A portfolio's expected return and risk is then to be 
+evaluated on $$S$$ mutually exclusive scenarios $$s = 1, ... , S$$, each of which occurring with a probability $$p_s$$
 
 An inherent problem of scenario generation is the dimensionality of the approximation of the continuous stochastic process. In order to get a good approximation of 
 the underlying process, a large number of scenarios are needed which in turn increases the size of the asset allocation problem. Two overall contrasting approaches 
 exist when addressing this problem, i.e. scenario reduction techniques and moment matching. Both try to reduce the number of scenarios while preserving the 
-overall structure. While both schools have merits, \cite{geyer2013scenario} compare the two methods in the context of financial optimization, and find 
+overall structure. While both schools have merits, [link](https://epub.wu.ac.at/4131/1/scenrednum25_SSRN.pdf) compare the two methods in the context of financial optimization, and find 
 (when ensuring the absence of arbitrage in the scenarios) that moment matching provides superior solutions compared to scenario reduction.
 
-Overall, the moment matching technique takes a set of statistical moments such as mean, standard deviation, skewness, kurtosis and correlation. 
-These parameters are taking to be the "true" moments of the stochastic process, and the method then seeks to approximate these moments using a finite number of 
-scenarios, e.g. 100 scenarios. In practice, this is done by minimizing the squared difference between the "true" moments and the moments of the scenarios. 
+The moment matching technique works by approximating the statistical moments (mean, standard deviation, skewness, kurtosis and correlation) of the original set of scenarios using a reduced number of scenarios. 
+The statistical moments are taking to be the "true" moments of the stochastic process, and the method then seeks to approximate these moments. In practice, this is done by minimizing the squared difference between the "true" moments and the moments of the reduced scenarios. 
 This is a bit similar to estimating the parameters in linear regression, where we estimate the squared residuals. The moment matching problem can be written as
 
 $$
-\min \ (mu_t - mu_s)^2 + (sd_t - sd_s)^2 + (skew_t - skew_s)^2 + (kur_t - kur_s)^2 + (corr_t - corr_s)^2
+\min \ (mu^* - mu_s)^2 + (sd^* - sd_s)^2 + (skew^* - skew_s)^2 + (kur^* - kur_s)^2 + (corr^* - corr_s)^2
 $$
 
-where $$t$$ denote the "true" statistical moments and $$s$$ denotes the statistical moments of our scenarios. This method can be conveniently implemented in 
+where $$*$$ denote the "true" statistical moments and $$s$$ denotes the statistical moments of our scenarios. This method can be conveniently implemented in 
 Python using the optimization routines in the excellent SciPy library.
 
-To show the application of the algorithm, let's download historical price from data for S&P500 and an aggregated bond index proxied by the ETFs SPY and AGG.
-We then compute the statistical moments: mean, standard deviation, skewness, kurtosis, and covariance. These are assumed to be the "true" moments that we seek to match with N scenarios.
+To show the application of the algorithm, let's download historical price data for S&P500 and an aggregated bond index proxied by the ETFs SPY and AGG.
+First, I compute the statistical moments: mean, standard deviation, skewness, kurtosis, and covariance. These are assumed to be the "true" moments that we seek to match with N scenarios.
 We set N = 50, and run the moment matching algoritm. The minimization function requires an initial guess on the starting parametes. We use the multivariante normal distribution as initial guess, which is probably not too far off assuming the we do not have extreme skewness or kurtosis.
 
-We can now plot our moment matched scenarios together with the historical realization.
+The resulting moment matched distribution is plotted below together with the historical monthly returns, where the yellow dots are our moment matched scenarios and the blue dots are the historical returns.
 
 ![CVAR](/assets/images/moment_match/reduced_scen.png)
 
+From the density plots and and correlation structure, we can observe that our moment matched scenarios are not too far off the original structure, despite only using less than half the amount of scenarios. Though, one problem with this approached is that the optimization problem is highly non-linear and is quit dependant on having good starting parameters. 
 
 ## Code
 
