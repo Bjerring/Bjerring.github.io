@@ -6,13 +6,13 @@ categories: ScenarioGeneration
 ---
 {% include lib/mathjax.html %}
 
-A cornerstone of sensible portfolio management is having a rigid risk management framework in place, hence, we need some method to evaluate risk. One such method is scenario generation, which works by createing a set of possible future outcomes for the next time period with corresponding probabilities.
+A cornerstone of sensible portfolio management is having a rigid risk management framework in place, hence, we need some method to evaluate risk. One such method is scenario generation, which works by creating a set of possible future outcomes for the next time period with corresponding probabilities.
 
 It is empirically observable that the financial markets do not follow a gaussian stochastic process and sometimes experience losses which succeed those possible if the returns were normally distributed. 
 It is therefore of interest to not only manage volatility but also tail events – so-called tail scenarios. As the underlying stochastic process is unknown, then we need to either assume a probability distribution or rely on historical observations.
 
-In this post, I will apply bootstrapping of historical returns to create a monthly scenarios. Bootstrapping is non-parametric sampling method similar to Monte-Carlo simulation. The method works by sampling from past observations to generate paths of potential future realizations. 
-The underlying assumption is that the future mimics the past. The financial market experience strong autocorrelation on a daily frequency, hence, returns are NID. 
+In this post, I will apply bootstrapping of historical returns to create monthly scenarios. Bootstrapping is a non-parametric sampling method similar to Monte-Carlo simulation. The method works by sampling from past observations to generate paths of potential future realizations. 
+The underlying assumption is that the future mimics the past. The financial market experience strong autocorrelation on a daily frequency, hence, returns are NID (NOT independent and identically distributed). 
 To accommodate this pattern, we resort to block bootstrapping (also known as time-series boot-strapping) to preserve this characteristic.
 
 Let's start by collecting data on S&P 500 and an emerging market index proxied by the ETFs SPY and EEM for the period 2015-01-01 to 2018-12-31. The monthly returns of the ETFs are plottet below.
