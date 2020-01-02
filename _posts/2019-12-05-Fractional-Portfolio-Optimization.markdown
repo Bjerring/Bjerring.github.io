@@ -2,13 +2,16 @@
 layout: post
 title:  "Fractional Portfolio Optimization"
 date:   2019-12-05 18:00:00 +0100
-categories: optimization
+category: equity
+tags: [optimization, portfolio]
 ---
 {% include lib/mathjax.html %}
 
 We often wish to find the portfolio with the highest risk-adjusted return, as we can leverage (or de-leverage) it to optain superior returns compared to any other portfolio. 
 I showed in [link](https://bjerring.github.io/risk,/optimization/2019/12/01/Portfolio-Optimization-using-CVaR.html) how to find this portfolio by solving a portfolio optimization problem for different risk aversion coefficients.
-Interestingly, we can actually find the optimal portfolio in one go instead of solving the model multiple times. This is done using a technique called fractional programming.
+This post is about how to find the optimal tangency portfolio in a faster way than previously shown.
+
+Instead of solve the portfolio optimization model over and over for different risk averision coefficients to find the portfolio with the highest risk adjusted return, then we can actually find the optimal portfolio in one go. This is done using a technique called fractional programming.
 The method works by mapping the problem into another space and introducing an auxiliary variable $$\tau$$. Though, certain requirements needs to be satisfied for us to be able to do that. We need two objectives, where one seeks to maximize a concave function and another miminizing a convex function, respectively, i.e. This is the case for portfolio optimization where we maximize returns (concave) and minimize risk (convex).
 
 If we use the mean-CVaR from earlier, then we can write the fractional formulation of the model as

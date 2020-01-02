@@ -63,7 +63,7 @@ class MomentMatch:
 
         return(epsilon)
 
-    def MomentMatching(self,Para_match,S_N=30,silent=False):
+    def MomentMatching(self,Para_match,S_N=50,silent=False):
         """ Moment Matching method, which minimize the error term between an approximation and the defined moments. The method starts by initializing the parameters using a normal distribution
         
         """
@@ -110,29 +110,6 @@ Para_match = np.array([mu_,std_,skew_,kur_,[cov_] ])
 # find a reduced number of scenarios with approx same statistical moments
 MM_scen = MM.MomentMatching(Para_match=Para_match)
 MM_df = pd.DataFrame(MM_scen,columns = df_ret.columns)
-
-mu_
-MM_df.mean()
-(mu_-MM_df.mean())/MM_df.mean()
-
-std_
-MM_df.std()
-(std_-MM_df.std())/MM_df.std()
-
-skew_
-MM_df.skew()
-(skew_-MM_df.skew())/MM_df.skew()
-
-kur_
-MM_df.kurtosis()
-(kur_-MM_df.kurtosis())/MM_df.kurtosis()
-
-cov_
-MM_df.cov()
-
-
-
-
 
 df1 = df_ret.copy()
 df2 = MM_df.copy()

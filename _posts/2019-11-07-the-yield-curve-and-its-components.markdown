@@ -2,10 +2,12 @@
 layout: post
 title:  "The Yield Curve and it's Components"
 date:   2019-11-07 18:00:00 +0100
-categories: bonds
+category: bonds
+tags: [PCA,curve,bond]
 ---
 
 Principal Component Analysis (PCA) is a well-known statistical technique from multivariate analysis used in managing and explaining interest rate risk. 
+This post describes how to find the level, slope and curvature of the yield curve using PCA.
 As inspiration, Let's first inspect the swap curver to qualitatively inspect how it changes over time.
 
 ![swap_rates](/assets/images/yield_curve/swap_rates.png)
@@ -22,12 +24,12 @@ The following box-and-whiskers plot of the same data gives a flavour of both rat
 
 In a box and whiskers plot, the centre line in the box is the median, the edges of the box are the lower and upper quartiles (25th and 75th percentile), whilst the whiskers highlight the last data point within a distance of 1.5 x (upper – lower quartile) from the lower and upper quartiles.
 
-In addition, we can observe that the correlation decreases according to difference in maturity
+In addition, we can observe that the correlation decreases according to the difference in maturity
 ![swap_heatmap](/assets/images/yield_curve/heatmap.png)
 
 ## PCA Decomposition
 
-The central idea of principal component analysis (PCA) is to reduce the dimensionality of a data set consisting of a large number of interrelated variables, while retaining as much as possible of the variation present in the data set. 
+The central idea of principal component analysis (PCA) is to reduce the dimensionality of a data set consisting of a large number of interrelated variables, while retaining as much of the variation present in the data set as possible. 
 PCA is often used to explain the drivers of interests rates and the potential risk inherent from these.
 
 We see that the first 3 principal components account for almost all of the variance in the our data, and thus we should just be able to use these three components to reconstruct our initial dataset while retaining most of the characteristics of it.
@@ -52,9 +54,9 @@ To appreciate the terms; level, slope and curvature, then it is useful to look a
 # Practical Applications
 
 Principal component analysis is especially usefull in the following areas.
-1. Explaining PnL – returns on rates products can be explained using level, slope, curvature and residual.
+1. Explaining PnL – returns on rates products can be explained using level, slope, curvature and the residual.
 2. Hedging – appropiate portfolio hedging can be determined by neutralising the movements in the first few principal components.
-3. Relative Value Analysis – the richness/cheapness of the curve can be analysed usingthe residuals of the PCA.
+3. Relative Value Analysis – the richness/cheapness of the curve can be analysed using the residuals of the PCA.
 4. Scenario Analysis – Scenario generation using the three components to evaluate market risk.
 
 ## Code
