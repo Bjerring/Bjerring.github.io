@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Portfolio Optimization using Conditional Value at Risk"
-date:   2019-12-01 18:00:00 +0100
+date:   2019-11-04 18:00:00 +0100
 category: equity
 tags: [risk, optimization]
 ---

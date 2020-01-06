@@ -1,15 +1,16 @@
 ---
 layout: post
 title:  "Scenario Generation using Bootstrapping"
-date:   2019-12-11 18:00:00 +0100
-categories: ScenarioGeneration
+date:   2019-12-01 18:00:00 +0100
+category: equity
+tags: [ScenarioGeneration]
 ---
 {% include lib/mathjax.html %}
 
 A cornerstone of sensible portfolio management is having a rigid risk management framework in place, hence, we need some method to evaluate risk. One such method is scenario generation, which works by creating a set of possible future outcomes for the next time period with corresponding probabilities.
 
-It is empirically observable that the financial markets do not follow a gaussian stochastic process and sometimes experience losses which succeed those possible if the returns were normally distributed. 
-It is therefore of interest to not only manage volatility but also tail events – so-called tail scenarios. As the underlying stochastic process is unknown, then we need to either assume a probability distribution or rely on historical observations.
+It is empirically observable that the financial markets do not follow a gaussian stochastic process and sometimes experience losses, which succeed those possible if the returns were normally distributed. 
+Hence, It is often of interest to not only manage volatility but also tail events in a portfolio management context – so-called tail scenarios. As the underlying stochastic process is unknown, then we need to either assume a probability distribution or rely on historical observations.
 
 In this post, I will apply bootstrapping of historical returns to create monthly scenarios. Bootstrapping is a non-parametric sampling method similar to Monte-Carlo simulation. The method works by sampling from past observations to generate paths of potential future realizations. 
 The underlying assumption is that the future mimics the past. The financial market experience strong autocorrelation on a daily frequency, hence, returns are NID (NOT independent and identically distributed). 
@@ -19,10 +20,10 @@ Let's start by collecting data on S&P 500 and an emerging market index proxied b
 
 ![CVAR](/assets/images/block_boot/hist_month_ret.png)
 
-We can observe from the shape of the return distributions (the dots) that the two ETFs are strongly correlated. In addition, there is only 47 dots, so we might not a good representation of what could happen in a tail scenario. 
+We can observe from the shape of the return distributions (the dots) that the two ETFs are strongly correlated. In addition, there is only 47 dots, so we might not have a good representation of what could happen in a tail scenario. 
 
 To get a better understanding of the risk that we inquire, we use block bootstrapping to generate monthly scenarios. This is done by randomly selecting four sequences of five consecutive days from the daily data and then accumulate the returns for these dates to create a monthly realization. We perform this task 1.000 times.
-We use the same dates for all assets, to preserve the correlation between assets and the blocks of dates ensure that we don't destroy the autocorrelation. The 1.000 scenarios is shown in the following graph.
+We use the same dates for all assets to preserve the correlation between assets and the blocks of dates ensure that we don't destroy the autocorrelation. The 1.000 scenarios is shown in the following graph.
 
 ![CVAR](/assets/images/block_boot/Block_bootstrap.png)
 
@@ -30,7 +31,7 @@ We can observe that we still have strong correlation between the two assets. In 
 
 ## Long-term and Short-term Tail Scenarios
 
-When sampling from historical data, then we have so far assumed that data from 3 years ago is eqully representative as data from yesterday. This is not true in reality, as the current economic situation might be vastly different from the one three years ago. Hence, we should put more weight on newer data.
+When sampling from historical data, then we have so far assumed that data from 3 years ago is eqully representative as data from yesterday. This is probably not true in reality, as the current economic situation might be vastly different from the one three years ago. Hence, we should put more weight on newer data.
 
 We motify the block bootstrap model a bit, so that we sample from a truncated normal distribution instead of a uniform distribution. The truncated normal distribution is basically the left side of the normal distribution, and looks like this.
 
