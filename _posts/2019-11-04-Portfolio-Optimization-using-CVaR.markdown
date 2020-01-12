@@ -1,32 +1,33 @@
 ---
 layout: post
-title:  "Portfolio Optimization using Conditional Value at Risk"
+title:  "Portfolio Optimisation using Conditional Value at Risk"
 date:   2019-11-04 18:00:00 +0100
 category: equity
 tags: [risk, optimization]
 ---
 {% include lib/mathjax.html %}
 
-Constructing a portfolio with high risk adjusted returns is all about risk management. Here, the mitigration of large loses is of paramount importance, as gains and losses are asymmetric by nature, e.g. if our portfolio's value drops by 10% then we would need to regain 11.1% to neutralize the losses.
-This post is about how to to implement the Conditional Value at Risk measure in a portfolio optimization framework.
+Constructing a portfolio with high risk adjusted returns is all about risk management. Here, the mitigration of large losses is of paramount importance, as gains and losses are asymmetric by nature. For example, if our portfolio value drops by 10% then we would need to regain 11.1% to neutralise this loss.
+This post is about how to implement the Conditional Value at Risk measure in a portfolio optimisation framework.
 
-Conditional Value at Risk is a popular risk measure among professionel investors to quantify the potential of large losses. The metric is computed as the average of the $$\alpha$$ % worst case scenarios over some time frame. The measure is a natural extention of the Value at Risk (VaR) measure proposed in the Basel II Accord. 
+Conditional Value at Risk (CVaR) is a popular risk measure among professional investors to quantify the extent of potential big losses. The metric is computed as an average of the $$\alpha$$ % worst case scenarios over some time horizon. The measure is a natural extention of the Value at Risk (VaR) measure proposed in the Basel II Accord. 
 
-The necessity of the introduction of CVaR is due to a long list of implications when using VaR in practice, e.g. assuming that returns are normally distribution. In addition, the VaR measurement fails to be risk coherent as it lack subadditivity and convexity. Here, subadditivity means that a portfolio's risk cannot be more than the combined risks of the individual positions. Though, in some special cases for the VaR metric, this statement becomes violated and it becomes mathematical possible to obtain a risk reduction by dividing a portfolio into two sub-portfolios. Intuitively, this does not make any sense and breaks the reason for diversifying a portfolio.
+The justification for the introduction of CVaR is due to the many numerical problems of using VaR in practice, e.g. an assumption of the normally distributed returns. In addition, the VaR measurement fails to be risk-coherent as it lacks subadditivity and convexity. Here, subadditivity means that a portfolio's risk cannot be more than the combined risks of the individual positions. Though, in some special cases for the VaR metric, this statement becomes violated and it becomes mathematically possible to obtain a risk reduction by dividing a portfolio into two sub-portfolios. Intuitively, this does not make any sense and breaks the reason for diversifying a portfolio.
 
-Conditional Value at Risk is a superior measure of risk and can be defined as
+  
+Conditional Value at Risk is a superior measure of risk and can be mathematically expressed as defined as
 $$
 \begin{equation}
-CVaR_{\alpha}(X) = E(-X|-X> VaR_{\alpha}(X)),
+CVaR_{\alpha}(X) = E(-X|-X> VaR_{\alpha}(X))
 \end{equation}
 $$
-which effectively defines the metric as the average of the $$ \alpha $$ worst case scenarios. This can also be visualized like this:
+This can also be visualised like this:
 
 ![CVAR](/assets/images/portfolio_cvar/cvar.png)
 
-Conditional Value at Risk is not only convinient as it better identifies the tail risk than VaR, but it also holds desirable numerical properties such as linearity. This means that we easily integrate it in a portfolio optimization framework.  
-Similar to the mean-variance model, we can construct a portfolio, which maximizes the expected return of a portfolio for some level of risk (in this case, expressed using CVaR).
-If we introduce a risk aversion coefficient $$ \lambda $$, then we can write the mean-CVaR portfolio optimization model as:
+Conditional Value at Risk is not only convinient as it better identifies the tail risk than VaR, but it also holds desirable numerical properties such as linearity. This means that we can easily integrate it in a portfolio optimisation framework.  
+Similar to the mean-variance model, we can construct a portfolio, which maximises the expected return for some level of risk (in this case, expressed using CVaR).
+If we introduce a risk aversion coefficient $$ \lambda $$, then we can write the mean-CVaR portfolio optimisation model as:
 
 $$
 \begin{equation}
@@ -40,17 +41,17 @@ $$
 \end{equation}
 $$
 
-There exist a quadratic relationship between risk and expected return. Hence, increasing the riskiness of a portfolio will not nessecarily off-set an equal increase in expected returns. This gives rise to the shape of the efficient frontier.
+There exist a quadratic relationship between risk and expected return. Hence, increasing the riskiness of a portfolio will not nessecarily result in an equal increase in expected returns. This is represented by the shape of the efficient frontier.
 
 <p align="center">
   <img src="/assets/images/portfolio_cvar/EF.png">
 </p>
 
-As risk and return is not linearly dependant, then it makes sense to consider the marginal increase in expected return when increasing the risk. This effectively leads to the maximization of the Sharpe ratio in the mean-variance setting, and the STAR ratio for CVaR.  
+As risk and return are not linearly dependant, it makes sense to consider the marginal increase in expected return when increasing the risk. This effectively leads to the maximisation of the Sharpe ratio in the mean-variance setting, and the STAR ratio for CVaR.  
 
 ## The Efficient Frontier
 
-To illustrate the application of CVaR in a portfolio setting, then we download data from Yahoo on 5 ETFs tracking four equity markets and one aggregated bond market, respectively. We use the brilliant Python library PuLP for formulating the linear optimization model, and iteratively find the optimal portfolio for different risk aversions, $$ \lambda $$ .
+To illustrate the application of CVaR in a portfolio setting, I download data from Yahoo on 5 ETFs, tracking four equity markets and one aggregated bond market respectively. We use the brilliant Python library PuLP to formulate a linear optimisation model, and iteratively find the optimal portfolio for different risk aversions, $$ \lambda $$ .
 
 ![EF](/assets/images/portfolio_cvar/EF_emperic.png)
 We can observe that our efficient frontier looks similar to what we would expect. In the beginning, we have a large increase in return when allowing for a bit more risk, while in the end we gain nearly no increase in expected returns for the same increase in risk.
@@ -59,9 +60,9 @@ Let's now observe the portfolio allocation for each frontier point.
 
 ![EF](/assets/images/portfolio_cvar/allocation.png)
 
-We see that the most risk averse portfolio consist primarily of bonds with a minor allocation to small cap stocks. As we increase the risk level, then our equity allocation increases as well. In the beginning, we primarily allocate to US Large Cap equity, which then changes to US small cap towards the more risky portfolios.
-This all makes perfect sense according to economic theory, as bonds should provide the most defensive allocation. Small Cap has on average returned higher profits than large cap, but also contributes with an additional risk to our investment, due to illiquidity, poor capitalization etc. This is known as the Size risk premia.
-Interestingly, we can see that our most risk averse portfolio consist of BOTH bonds and small cap. Small cap should be the most risky investment, but due to the low correlation between bond returns and small cap stock returns then we can achieve diversification benefits from including it which more than offset it's component risk.
+We see that the most risk averse portfolio consists primarily of bonds with a minor allocation to small cap stocks. As we increase the risk level, the equity allocation increases as well. In the beginning, we primarily allocate to the US Large Cap equity, which then changes to the US Small Cap towards the more risky portfolios.
+This all makes perfect sense according to the economic theory, as bonds should provide the most defensive allocation. Small Cap on average returns higher profits than Large Cap, but also contributes with an additional risk to the portfolio, due to illiquidity, poor capitalisation etc. This is known as the Size risk premia.
+Interestingly, we can see that our most risk averse portfolio consist of BOTH bonds and Small Cap. Small Cap should be the most risky investment, but due to the low correlation between bond returns and Small Cap stock returns then we can achieve diversification benefits from including it which more than offset its component risk.
 
 
 ## Code
