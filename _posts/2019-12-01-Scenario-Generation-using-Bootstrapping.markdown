@@ -7,14 +7,14 @@ tags: [ScenarioGeneration]
 ---
 {% include lib/mathjax.html %}
 
-A cornerstone of sensible portfolio management is having a rigid risk management framework in place, hence, we need some method to evaluate risk. One such method is scenario generation, which works by creating a set of possible future outcomes for the next time period with corresponding probabilities.
+A cornerstone of sensible portfolio management is having a rigid risk management framework in place. So every manager needs a good method to evaluate risk. One such method is scenario generation, which works by creating a set of possible future outcomes for the next time period, with corresponding probabilities.
 
-It is empirically observable that financial markets do not follow a gaussian stochastic process and sometimes experience losses greater than if returns were normally distributed. 
+It is empirically observable that financial markets do not follow a Gaussian stochastic process and sometimes experience losses greater than if returns were normally distributed. 
 Hence, in a portfolio management context it is desirable to manage not only volatility but also tail events – so-called tail scenarios. As the underlying stochastic process is unknown, we need to either assume a probability distribution or to rely on historical observations.
 
 In this post, I will apply bootstrapping of historical returns to create monthly scenarios. Bootstrapping is a non-parametric sampling method similar to Monte-Carlo simulation. The method works by sampling from past observations to generate paths of potential future realizations. 
 The underlying assumption is that the future mimics the past. The financial markets experience strong autocorrelation on a daily frequency, hence, returns are NID (NOT independent and identically distributed). 
-To accommodate this pattern, we resort to block bootstrapping (also known as time-series boot-strapping).
+To accommodate this pattern, we resort to block bootstrapping (also known as time-series bootstrapping).
 
 Let's start by collecting data on S&P 500 and an emerging market index proxied by the ETFs SPY and EEM for the period 2015-01-01 to 2018-12-31. The monthly returns of the ETFs are plotted below.
 
@@ -22,12 +22,12 @@ Let's start by collecting data on S&P 500 and an emerging market index proxied b
 
 We can observe from the shape of the return distributions (the dots) that the two ETFs are strongly correlated. In addition, there are only 47 dots, so we might not have a good representation of what could happen in a tail scenario. 
 
-To get a better understanding of the risk that we undertake, we use block bootstrapping to generate monthly scenarios. This is done by randomly selecting four sequences of five consecutive days from the daily data and then accumulate the returns for these dates to create a monthly realization. We perform this task 1.000 times.
-We use the same dates for all assets to preserve the correlation between assets, while the blocks of dates ensure that we don't destroy the autocorrelation. The 1.000 scenarios are shown in the following graph.
+To get a better understanding of the risk that we undertake, I use block bootstrapping to generate monthly scenarios. This is done by randomly selecting four sequences of five consecutive days from the daily data and then accumulate the returns for these dates to create a monthly realization. We perform this task 1.000 times.
+We use the same dates for all assets to preserve the correlation between assets, while grouping dates into blocks ensures that we don't destroy the autocorrelation. The 1.000 scenarios are shown in the following graph.
 
 ![CVAR](/assets/images/block_boot/Block_bootstrap.png)
 
-We can observe that we still have strong correlation between the two assets. In addition, we have much more pessimistic scenarios compared to the historic ones without them being too unrealistic.
+We can observe that there is still strong correlation between the two assets. In addition, we have much more pessimistic scenarios compared to the historic ones without them being too unrealistic.
 
 ## Long-term and Short-term Tail Scenarios
 
@@ -37,7 +37,7 @@ We modify the block bootstrap model a bit, so that we sample from a truncated no
 
 ![CVAR](/assets/images/block_boot/trunc_norm.png)
 
-If we use this distribution instead, then we get more samples from the newest data and less from the oldest data, though we will still include some older realizations. 
+If we use this distribution instead, then we get more samples from the newest data and less from the oldest data, though some older realizations are still included. 
 Again, we generate 1.000 monthly scenarios and plot the results.
 
 ![CVAR](/assets/images/block_boot/Block_bootstrap_truncated.png)

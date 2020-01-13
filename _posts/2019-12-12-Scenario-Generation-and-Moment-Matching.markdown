@@ -41,7 +41,7 @@ The resulting moment matched distribution is plotted below together with the his
 
 ![CVAR](/assets/images/moment_match/reduced_scen.png)
 
-From the density plots and and correlation structure, we can observe that our moment matched scenarios are quite close to the original structure, despite only using less than half the amount of scenarios. Though, one problem with this approached is that the optimization problem is highly non-linear and is quit dependant on having good starting parameters. 
+From the density plots and correlation structure, we can observe that our moment matched scenarios are quite close to the original structure, despite only using less than half the amount of scenarios. Though, one problem with this approach remains: the optimization problem is highly non-linear and is quite dependant on having good starting parameters. 
 
 ## Code
 

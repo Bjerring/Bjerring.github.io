@@ -7,12 +7,13 @@ tags: [optimization, portfolio]
 ---
 {% include lib/mathjax.html %}
 
-Asset managers often wish to find the portfolio with the highest risk-adjusted return, as we can leverage (or de-leverage) it to obtain superior returns compared to any other portfolio. 
+Asset managers often wish to find the portfolio with the highest risk-adjusted return, as it can leveraged (or de-leveraged) to obtain superior returns compared to any other portfolio. 
 I showed in [link](https://bjerring.github.io/risk,/optimization/2019/12/01/Portfolio-Optimization-using-CVaR.html) how to find this portfolio by solving a portfolio optimization problem for different risk aversion coefficients.
 This post describes how to find the optimal tangency portfolio in a faster way than previously shown.
 
-Instead of solving the portfolio optimization model over and over for different risk averision coefficients to find the portfolio with the highest risk adjusted return, we can actually find the optimal portfolio in one step. This can be done using a technique called fractional programming.
-The method works by mapping the problem into another space and introducing an auxiliary variable $$\tau$$. However, certain requirements need to be satisfied before using this approach. We need two objectives, where one seeks to maximize a concave function and another - to miminize a convex function. This is the case for portfolio optimization where we maximize returns (concave) and minimize risk (convex).
+Instead of solving the portfolio optimization model over and over for different risk averision coefficients to find the portfolio with the highest risk-adjusted return, we can actually find the optimal portfolio in one step. This can be done using a technique called fractional programming.
+The method works by mapping the problem into another space and introducing an auxiliary variable $$\tau$$. However, certain requirements need to be satisfied before using this approach. We need two objectives, where one seeks to maximize a concave function and another - to miminize a convex function. 
+This is the case for portfolio optimization where we maximize returns (concave) and minimize risk (convex).
 
 If we use the mean-CVaR, we can write the fractional formulation of the model as
 
@@ -30,7 +31,7 @@ $$
 
 where $$x_i$$ is the fraction to be invested in each asset, and $$\mu_i$$ and $$\mu_i^b$$ is the expected return of each asset and a benchmark, respectively. $$\xi^{\alpha}$$ is the Value at Risk, $$\y_s^{+}$$ is an auxilirary variable, and $$scen_{i,s}$$ is the scenarios.
 
-If we use the efficient frontier and compute the optimal fractional portfolio with a benchmark of 0% return, we can observe that that it lies very much to the left on the risk scale. The portfolio consists of 82% bonds, 15% S&P500 and 3% Small Cap, hence, it is a very risk averse portfolio.
+If we use the efficient frontier and compute the optimal fractional portfolio with a benchmark of 0% return, we can observe that that it lies very much to the left on the risk scale. The portfolio consists of 82% bonds, 15% S&P500 and 3% Small Cap, so it is a very risk-averse portfolio.
 
 ![CVAR](/assets/images/fractional/efficient_frontier.png)
 
@@ -46,7 +47,7 @@ Here, the portfolio consist of 80% S&P 500, 13% Emerging Market and 7% in global
 
 The benchmark in the model can be seen as a return requirement, and the optimal portfolio is a portfolio which is most likely to outperform it. In this way, the fractional mean-CVaR model can actually be considered as a form of enhanced index tracking, where we seek to construct a model which tracks some index (the benchmark), but also seeks to outperform it.
 
-So far, we have not introduced the leverage into the model. The first portfolio has much higher risk adjusted returns than the second one, which mean that we can leverage it to deliver superior returns for the same amount of risk, assuming that it is free to borrow money.
+So far, we have not introduced the leverage into the model. The first portfolio has much higher risk-adjusted returns than the second one, which means that it can be leveraged to deliver superior returns with the same amount of risk, assuming that it is free to borrow money.
 We need to leverage the first portfolio approximately 4x to obtain the same amount of risk as the second one.
 
 If we construct an insample horse race between the two strategies where the strategies has equal risk, we get the following

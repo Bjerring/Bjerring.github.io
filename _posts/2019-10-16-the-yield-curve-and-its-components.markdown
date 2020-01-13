@@ -22,7 +22,7 @@ The following box-and-whiskers plot of the same data gives a flavor of both rate
 
 ![swap_summary](/assets/images/yield_curve/swap_rates_summary.png)
 
-In a box-and-whiskers plot, the centre line in the box is the median, the edges of the box are the lower and upper quartiles (25th and 75th percentile), whilst the whiskers highlight the last data point within a distance of 1.5 x (upper – lower quartile) from the lower and upper quartiles.
+In a box-and-whiskers plot, the centre line in the box is the median, the edges of the box are the lower and upper quartiles (25th and 75th percentile), whilst the whiskers represent the last data point within a distance of 1.5 x (upper – lower quartile) from the lower and upper quartiles.
 
 In addition, we can observe that the correlation decreases according to the difference in maturity
 ![swap_heatmap](/assets/images/yield_curve/heatmap.png)
@@ -32,7 +32,7 @@ In addition, we can observe that the correlation decreases according to the diff
 The central idea of the principal component analysis (PCA) is to reduce the dimensionality of a data set consisting of a large number of interrelated variables, while retaining as much of the variation present in the data set as possible. 
 PCA is often used to explain the drivers of interests rates and the potential risk inherent from these.
 
-We see that the first 3 principal components account for almost all of the variance in our data, so we should be able to use just these three components to reconstruct our initial dataset while retaining most of its characteristics.
+The first 3 principal components account for almost all of the variance in our data, so we should be able to use just these three components to reconstruct the initial dataset while retaining most of its characteristics.
 
 ![explained_variance](/assets/images/yield_curve/explained_variance.png)
 
@@ -46,7 +46,7 @@ One of the PCA advantages that can be used in the interest rates analysis is its
 
 ![loadings](/assets/images/yield_curve/factor loadings.png)
 
-To get an idea of the terms: level, slope and curvature, it is useful to look at changes in the sign of the principal component loadings in the graph above. 
+To get an idea of the terms $$level$$, $$slope$$ and $$curvature$$, it is useful to look at the changes in the sign of the principal component loadings in the graph above. 
 1. PC1 has the same sign for each maturity, so all rates will move up or down together due to the first principal component (level). 
 2. PC2 has one change in sign, so the shorter maturity rates will move in opposite direction to the longer rates due to the second principal component (slope). 
 3. PC3 has two changes in sign. Here, the shortest and longest maturities move in the same direction, whilst the middle maturities move in the opposite direction (curvature).
@@ -55,8 +55,8 @@ To get an idea of the terms: level, slope and curvature, it is useful to look at
 
 Principal component analysis is especially usefull in the following areas:
 1. Explaining PnL – returns on rates products can be explained using level, slope, curvature and the residual.
-2. Hedging – appropiate portfolio hedging can be determined by neutralising the movements in the first few principal components.
-3. Relative Value Analysis – the richness/cheapness of the curve can be analysed using the residuals of the PCA.
+2. Hedging – appropiate portfolio hedging can be determined by neutralizing the movements in the first few principal components.
+3. Relative Value Analysis – the richness/cheapness of the curve can be analyzed using the residuals of the PCA.
 4. Scenario Analysis – scenario generation using the three components to evaluate market risk.
 
 ## Code
